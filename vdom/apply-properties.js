@@ -1,4 +1,5 @@
 var isObject = require("is-object")
+var isObjectLiteral = require("./is-object-literal")
 var isHook = require("../vnode/is-vhook.js")
 
 module.exports = applyProperties
@@ -8,19 +9,19 @@ function applyProperties(node, props, previous) {
         var propValue = props[propName]
 
         if (propValue === undefined) {
-            removeProperty(node, propName, propValue, previous);
+            removeProperty(node, propName, propValue, previous)
         } else if (isHook(propValue)) {
             removeProperty(node, propName, propValue, previous)
             if (propValue.hook) {
-                propValue.hook(node,
+                propValue.hook(node.self(),
                     propName,
                     previous ? previous[propName] : undefined)
             }
         } else {
-            if (isObject(propValue)) {
-                patchObject(node, props, previous, propName, propValue);
+            if (isObjectLiteral(propValue)) {
+                applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
             } else {
-                node[propName] = propValue
+                node(propName, propValue)
             }
         }
     }
@@ -29,23 +30,26 @@ function applyProperties(node, props, previous) {
 function removeProperty(node, propName, propValue, previous) {
     if (previous) {
         var previousValue = previous[propName]
+        var self = node.self()
 
-        if (!isHook(previousValue)) {
-            if (propName === "attributes") {
-                for (var attrName in previousValue) {
-                    node.removeAttribute(attrName)
-                }
-            } else if (propName === "style") {
-                for (var i in previousValue) {
-                    node.style[i] = ""
-                }
-            } else if (typeof previousValue === "string") {
-                node[propName] = ""
-            } else {
-                node[propName] = null
-            }
-        } else if (previousValue.unhook) {
-            previousValue.unhook(node, propName, propValue)
+        if (self) {
+          if (!isHook(previousValue)) {
+              var prop = self[propName]
+
+              if (isObject(prop)
+                && (prop instanceof Property
+                || prop instanceof PropertyGroup)
+                && (prop.parentProperty.propertyType === PropertyType.INDEXED_GROUP
+                || prop.parentProperty.matchName === 'ADBE Text Animator')) {
+                  prop.remove()
+
+                  if (node.hasOwnProperty(propName)) {
+                    delete node[propName]
+                  }
+              }
+          } else if (previousValue.unhook) {
+              previousValue.unhook(self, propName, propValue)
+          }
         }
     }
 }

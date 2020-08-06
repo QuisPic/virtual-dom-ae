@@ -1,4 +1,5 @@
 var isObject = require("is-object")
+var isObjectLiteral = require("../vdom/is-object-literal")
 var isHook = require("../vnode/is-vhook")
 
 module.exports = diffProps
@@ -17,7 +18,7 @@ function diffProps(a, b) {
 
         if (aValue === bValue) {
             continue
-        } else if (isObject(aValue) && isObject(bValue)) {
+        } else if (isObjectLiteral(aValue) && isObjectLiteral(bValue)) {
             if (getPrototype(bValue) !== getPrototype(aValue)) {
                 diff = diff || {}
                 diff[aKey] = bValue

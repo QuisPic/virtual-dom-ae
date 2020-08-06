@@ -1,4 +1,5 @@
 var version = require("./version")
+var isArray = require("x-is-array")
 var isVNode = require("./is-vnode")
 var isWidget = require("./is-widget")
 var isThunk = require("./is-thunk")
@@ -9,12 +10,12 @@ module.exports = VirtualNode
 var noProperties = {}
 var noChildren = []
 
-function VirtualNode(tagName, properties, children, key, namespace) {
+function VirtualNode(tagName, initialProp, properties, children, key) {
     this.tagName = tagName
+    this.initialProp = isArray(initialProp) ? initialProp : [initialProp]
     this.properties = properties || noProperties
     this.children = children || noChildren
     this.key = key != null ? String(key) : undefined
-    this.namespace = (typeof namespace === "string") ? namespace : null
 
     var count = (children && children.length) || 0
     var descendants = 0

@@ -14,34 +14,43 @@ function applyPatch(vpatch, domNode, renderOptions) {
 
     switch (type) {
         case VPatch.REMOVE:
-            return removeNode(domNode, vNode)
+            return removeNode(domNode, vNode);
         case VPatch.INSERT:
-            return insertNode(domNode, patch, renderOptions)
-        case VPatch.VTEXT:
-            return stringPatch(domNode, vNode, patch, renderOptions)
+            return insertNode(domNode, patch, renderOptions);
         case VPatch.WIDGET:
-            return widgetPatch(domNode, vNode, patch, renderOptions)
+            return widgetPatch(domNode, vNode, patch, renderOptions);
         case VPatch.VNODE:
-            return vNodePatch(domNode, vNode, patch, renderOptions)
+            return vNodePatch(domNode, vNode, patch, renderOptions);
         case VPatch.ORDER:
-            reorderChildren(domNode, patch)
+            reorderChildren(domNode, patch);
             return domNode
         case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties)
+            applyProperties(domNode, patch, vNode.properties);
             return domNode
         case VPatch.THUNK:
             return replaceRoot(domNode,
-                renderOptions.patch(domNode, patch, renderOptions))
+                renderOptions.patch(domNode, patch, renderOptions));
         default:
-            return domNode
+            return domNode;
     }
 }
 
 function removeNode(domNode, vNode) {
-    var parentNode = domNode.parentNode
+    var self = domNode.self()
+    var parent = domNode.parent
 
-    if (parentNode) {
-        parentNode.removeChild(domNode)
+    if (self) {
+      self.remove()
+    }
+
+    if (parent) {
+      var childs = parent.childNodes
+      for (var i = 0, len = childs.length; i < len; i++) {
+        if (childs[i] === domNode) {
+          childs.splice(i, 1)
+          break;
+        }
+      }
     }
 
     destroyWidget(domNode, vNode);
@@ -50,62 +59,67 @@ function removeNode(domNode, vNode) {
 }
 
 function insertNode(parentNode, vNode, renderOptions) {
-    var newNode = renderOptions.render(vNode, renderOptions)
+    var newNode = renderOptions.render(vNode, parentNode)
 
-    if (parentNode) {
-        parentNode.appendChild(newNode)
+    if (newNode) {
+        parentNode.childNodes.push(newNode)
     }
 
     return parentNode
 }
 
-function stringPatch(domNode, leftVNode, vText, renderOptions) {
-    var newNode
-
-    if (domNode.nodeType === 3) {
-        domNode.replaceData(0, domNode.length, vText.text)
-        newNode = domNode
-    } else {
-        var parentNode = domNode.parentNode
-        newNode = renderOptions.render(vText, renderOptions)
-
-        if (parentNode && newNode !== domNode) {
-            parentNode.replaceChild(newNode, domNode)
-        }
-    }
-
-    return newNode
-}
-
 function widgetPatch(domNode, leftVNode, widget, renderOptions) {
     var updating = updateWidget(leftVNode, widget)
-    var newNode
+    var parentNode = domNode.parent
+    var newNode = domNode
 
     if (updating) {
-        newNode = widget.update(leftVNode, domNode) || domNode
+        var self = domNode.self()
+        var newNodeSelf = widget.update(leftVNode, self) || self
+        if (newNodeSelf !== self) {
+          newNode = renderOptions.render(widget, parentNode)
+        }
     } else {
-        newNode = renderOptions.render(widget, renderOptions)
+        newNode = renderOptions.render(widget, parentNode)
+        destroyWidget(domNode.self(), leftVNode)
     }
 
-    var parentNode = domNode.parentNode
-
-    if (parentNode && newNode !== domNode) {
-        parentNode.replaceChild(newNode, domNode)
-    }
-
-    if (!updating) {
-        destroyWidget(domNode, leftVNode)
+    if (newNode !== domNode) {
+      for (var key in domNode) {
+        if (domNode.hasOwnProperty(key)) {
+          if (newNode.hasOwnProperty(key)) {
+            domNode[key] = newNode[key]
+          } else {
+            delete domNode[key]
+          }
+        }
+      }
     }
 
     return newNode
 }
 
 function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
-    var parentNode = domNode.parentNode
-    var newNode = renderOptions.render(vNode, renderOptions)
+    var newNode = domNode
+    var self = domNode.self()
+    var parentTree = domNode.parent
 
-    if (parentNode && newNode !== domNode) {
-        parentNode.replaceChild(newNode, domNode)
+    if (self) {
+      self.remove()
+    }
+
+    if (parentTree) {
+      newNode = renderOptions.render(vNode, parentTree)
+  
+      for (var key in domNode) {
+        if (domNode.hasOwnProperty(key)) {
+          if (newNode.hasOwnProperty(key)) {
+            domNode[key] = newNode[key]
+          } else {
+            delete domNode[key]
+          }
+        }
+      }
     }
 
     return newNode
@@ -130,22 +144,60 @@ function reorderChildren(domNode, moves) {
         if (remove.key) {
             keyMap[remove.key] = node
         }
-        domNode.removeChild(node)
+        childNodes.splice(remove.from, 1)
     }
 
-    var length = childNodes.length
     for (var j = 0; j < moves.inserts.length; j++) {
-        insert = moves.inserts[j]
-        node = keyMap[insert.key]
-        // this is the weirdest bug i've ever seen in webkit
-        domNode.insertBefore(node, insert.to >= length++ ? null : childNodes[insert.to])
+      insert = moves.inserts[j]
+      node = keyMap[insert.key]
+
+      childNodes.splice(insert.to, 0, node)
+
+      var self = node.self()
+      if (self) {
+        if (insert.to >= childNodes.length - 1) {
+          self.moveToEnd()
+        } else if (insert.to <= 0) {
+          self.moveToBeginning()
+        } else {
+          self.moveBefore(childNodes[insert.to + 1].self())
+        }
+      }
     }
 }
 
 function replaceRoot(oldRoot, newRoot) {
-    if (oldRoot && newRoot && oldRoot !== newRoot && oldRoot.parentNode) {
-        oldRoot.parentNode.replaceChild(newRoot, oldRoot)
+    var parent = oldRoot.parent
+    if (oldRoot && newRoot && oldRoot !== newRoot && parent) {
+
+      if (parent && parent.self()) {    
+        for (var key in oldRoot) {
+          if (oldRoot.hasOwnProperty(key)) {
+            if (newRoot.hasOwnProperty(key)) {
+              oldRoot[key] = newRoot[key]
+            } else {
+              delete oldRoot[key]
+            }
+          }
+        }
+      }
     }
 
-    return newRoot;
+    return oldRoot;
+}
+
+function getParentNode(self) {
+    if (self instanceof CompItem
+      || self instanceof FolderItem
+      || self instanceof FootageItem) {
+        return self.parentFolder
+    } else if (self instanceof AVLayer
+      || self instanceof ShapeLayer
+      || self instanceof TextLayer
+      || self instanceof CameraLayer
+      || self instanceof LightLayer) {
+        return self.containingComp
+    }
+
+    return null
 }

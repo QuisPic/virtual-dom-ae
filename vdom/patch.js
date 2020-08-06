@@ -1,4 +1,3 @@
-var document = require("global/document")
 var isArray = require("x-is-array")
 
 var render = require("./create-element")
@@ -24,11 +23,11 @@ function patchRecursive(rootNode, patches, renderOptions) {
     }
 
     var index = domIndex(rootNode, patches.a, indices)
-    var ownerDocument = rootNode.ownerDocument
+    // var ownerDocument = rootNode.ownerDocument
 
-    if (!renderOptions.document && ownerDocument !== document) {
-        renderOptions.document = ownerDocument
-    }
+    // if (!renderOptions.document && ownerDocument !== document) {
+    //     renderOptions.document = ownerDocument
+    // }
 
     for (var i = 0; i < indices.length; i++) {
         var nodeIndex = indices[i]

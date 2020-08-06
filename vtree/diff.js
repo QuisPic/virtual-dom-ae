@@ -2,7 +2,6 @@ var isArray = require("x-is-array")
 
 var VPatch = require("../vnode/vpatch")
 var isVNode = require("../vnode/is-vnode")
-var isVText = require("../vnode/is-vtext")
 var isWidget = require("../vnode/is-widget")
 var isThunk = require("../vnode/is-thunk")
 var handleThunk = require("../vnode/handle-thunk")
@@ -40,9 +39,7 @@ function walk(a, b, patch, index) {
         apply = appendPatch(apply, new VPatch(VPatch.REMOVE, a, b))
     } else if (isVNode(b)) {
         if (isVNode(a)) {
-            if (a.tagName === b.tagName &&
-                a.namespace === b.namespace &&
-                a.key === b.key) {
+            if (a.tagName === b.tagName && a.key === b.key) {
                 var propsPatch = diffProps(a.properties, b.properties)
                 if (propsPatch) {
                     apply = appendPatch(apply,
@@ -56,13 +53,6 @@ function walk(a, b, patch, index) {
         } else {
             apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
             applyClear = true
-        }
-    } else if (isVText(b)) {
-        if (!isVText(a)) {
-            apply = appendPatch(apply, new VPatch(VPatch.VTEXT, a, b))
-            applyClear = true
-        } else if (a.text !== b.text) {
-            apply = appendPatch(apply, new VPatch(VPatch.VTEXT, a, b))
         }
     } else if (isWidget(b)) {
         if (!isWidget(a)) {
