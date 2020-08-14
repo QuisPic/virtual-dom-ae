@@ -41,8 +41,15 @@ function createDomTree(node, domParent) {
 
       if (self) {
         if (typeof self[propName] === 'function') {
-          value = isArray(value) ? value : [value]
-          self[propName].apply(self, value)
+          if (isArray(value)) {
+            try {
+              self[propName].apply(self, value)
+            } catch (err) {
+              self[propName](value)
+            }
+          } else {
+            self[propName](value)
+          }
         } else {
           self[propName] = value
           if (propName === 'name') tree.nodeName = value
