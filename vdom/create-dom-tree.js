@@ -6,35 +6,13 @@ module.exports = createDomTree
 function createDomTree(node, domParent) {
   function tree(propName, value) {
     if (value === undefined) {
-      if (tree.hasOwnProperty(propName) && tree[propName]) {
-        return tree[propName]
+      if (tree.props.hasOwnProperty(propName) && tree.props[propName]) {
+        return tree.props[propName]
       } else {
         var self = tree.self()
         var prop = self[propName]
-
-        if (prop === undefined && self instanceof PropertyGroup) {
-          var hashTagIndex = propName.indexOf('#')
-          var propCreateName
-          var displayName
-
-          if (hashTagIndex !== -1) {
-            displayName = propName.slice(hashTagIndex + 1)
-            propCreateName = propName.slice(0, hashTagIndex)
-          } else {
-            propCreateName = propName
-          }
-
-          prop = self.addProperty(propCreateName)
-
-          if (displayName) prop.name = displayName
-        }
-
-        if (isObject(prop)) {
-          prop = createDomTree(prop, tree)
-          tree[propName] = prop
-        }
-
-        return prop
+        
+        return tree.addProp(prop, propName)
       }
     } else {
       var self = tree.self()
@@ -48,7 +26,13 @@ function createDomTree(node, domParent) {
               self[propName](value)
             }
           } else {
-            self[propName](value)
+            try {
+              self[propName](value)
+            } catch (err) {
+              // for Dashes on Strokes
+              self.addProperty(propName)
+              self[propName](value)
+            }
           }
         } else {
           self[propName] = value
@@ -66,14 +50,40 @@ function createDomTree(node, domParent) {
       var parent = this.parent && this.parent.self()
   
       if (parent instanceof PropertyGroup
-        || parent instanceof Property
-        || parent instanceof MaskPropertyGroup) {
+       || parent instanceof Property
+       || parent instanceof MaskPropertyGroup) {
         this.selfNode = parent[this.nodeName]
         return this.selfNode
       }
     }
   }
 
+  tree.addMember = function(propName, propKey) {
+    var self = this.self()
+
+    if (self instanceof PropertyGroup) {
+      var prop = self.addProperty(propName)
+
+      if (propKey !== undefined) { 
+        prop.name = propKey
+      }
+
+      return this.addProp(prop, propKey)
+    } else {
+      throw new Error('Cannot add property ' + propName + '. ' + this.nodeName + ' is not a PropertyGroup')
+    }
+  }
+
+  tree.addProp = function(prop, propKey) {
+    if (isObject(prop)) {
+      var propTree = createDomTree(prop, this)
+      this.props[propKey] = propTree
+
+      return propTree
+    }
+  }
+
+  tree.props = {}
   tree.selfNode = node
   tree.nodeName = node.name
   tree.childNodes = []

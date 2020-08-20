@@ -14,6 +14,7 @@
     "author": "QuisPic <denis.quis@mail.com>",
     "repository": "git://github.com/QuisPic/virtual-dom-ae.git",
     "main": "index",
+    "types": "./types",
     "homepage": "https://github.com/QuisPic/virtual-dom-ae",
     "contributors": [
         {
@@ -31,6 +32,7 @@
         "global": "^4.3.0",
         "is-object": "^1.0.1",
         "next-tick": "^0.2.2",
+        "types-for-adobe": "pravdomil/types-for-adobe",
         "x-is-array": "0.1.0",
         "x-is-string": "0.1.0"
     },

@@ -17,11 +17,15 @@ function applyProperties(node, props, previous) {
                     propName,
                     previous ? previous[propName] : undefined)
             }
-        } else if (propName === 'keyframes') {
-            setKeys(node.self(), propValue)
         } else {
             if (isObjectLiteral(propValue)) {
-                applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
+                if (propName === 'keyframes') {
+                  setKeys(node.self(), propValue)
+                } else if (propName === 'members') {
+                  members(node, propValue, previous ? previous[propName] : undefined)
+                } else {
+                  applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
+                }
             } else {
                 node(propName, propValue)
             }
@@ -90,6 +94,33 @@ function patchObject(node, props, previous, propName, propValue) {
         var value = propValue[k]
         node[propName][k] = (value === undefined) ? replacer : value
     }
+}
+
+function members(node, members, previous) {
+  var propName, propKey, propTree, keys
+  
+  for (propName in members) {
+    keys = members[propName]
+    for (propKey in keys) {
+      propTree = node.props[propKey]
+
+      if (!propTree) {
+        propTree = node.addMember(propName, propKey)
+      }
+
+      if (previous) {
+        if (previous[propName]) {
+          previous = previous[propName][propKey]
+        } else {
+          previous = undefined
+        }
+      } else {
+        previous = undefined
+      }
+
+      applyProperties(propTree, keys[propKey], previous)
+    } 
+  }
 }
 
 function getPrototype(value) {

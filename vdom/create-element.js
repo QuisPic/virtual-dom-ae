@@ -30,11 +30,19 @@ function createElement(vnode, domParent) {
         node = app.project.items
         break;
       case 'comp':
-        parent = parent || app.project.items
+        if (parent) {
+          parent = parent.items
+        } else {
+          parent = app.project.items
+        }
         node = parent.addComp.apply(parent, initial)
         break;
       case 'folder':
-        parent = parent || app.project.items
+        if (parent) {
+          parent = parent.items
+        } else {
+          parent = app.project.items
+        }
         node = parent.addFolder.apply(parent, initial)
         break;
       case 'avLayer':
