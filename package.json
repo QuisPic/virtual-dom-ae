@@ -14,7 +14,7 @@
     "author": "QuisPic <denis.quis@mail.com>",
     "repository": "git://github.com/QuisPic/virtual-dom-ae.git",
     "main": "index",
-    "types": "./types",
+    "types": "./index.d.ts",
     "homepage": "https://github.com/QuisPic/virtual-dom-ae",
     "contributors": [
         {

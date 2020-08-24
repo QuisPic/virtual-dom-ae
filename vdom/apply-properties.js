@@ -6,23 +6,20 @@ var setKeys = require("./set-keyframes")
 module.exports = applyProperties
 
 function applyProperties(node, props, previous) {
+    var hooks
     for (var propName in props) {
         var propValue = props[propName]
 
         if (propValue === undefined) {
             removeProperty(node, propName, propValue, previous)
-        } else if (isHook(propValue)) {
-            if (propValue.hook) {
-                propValue.hook(node.self(),
-                    propName,
-                    previous ? previous[propName] : undefined)
-            }
         } else {
             if (isObjectLiteral(propValue)) {
                 if (propName === 'keyframes') {
                   setKeys(node.self(), propValue)
                 } else if (propName === 'members') {
                   members(node, propValue, previous ? previous[propName] : undefined)
+                } else if (propName === 'hooks') {
+                  hooks = propValue
                 } else {
                   applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
                 }
@@ -30,6 +27,19 @@ function applyProperties(node, props, previous) {
                 node(propName, propValue)
             }
         }
+    }
+
+    if (hooks != undefined && isObjectLiteral(hooks)) {
+      var hookName, hookValue
+      var prevHooks = previous ? previous.hooks : undefined
+
+      for (hookName in hooks) {
+        hookValue = hooks[hookName]
+        
+        if (isHook(hookValue)) {
+          hookValue.hook(node.self(), hookName, prevHooks ? prevHooks[hookName] : undefined)
+        }
+      }
     }
 }
 
@@ -60,42 +70,6 @@ function removeProperty(node, propName, propValue, previous) {
     }
 }
 
-function patchObject(node, props, previous, propName, propValue) {
-    var previousValue = previous ? previous[propName] : undefined
-
-    // Set attributes
-    if (propName === "attributes") {
-        for (var attrName in propValue) {
-            var attrValue = propValue[attrName]
-
-            if (attrValue === undefined) {
-                node.removeAttribute(attrName)
-            } else {
-                node.setAttribute(attrName, attrValue)
-            }
-        }
-
-        return
-    }
-
-    if(previousValue && isObject(previousValue) &&
-        getPrototype(previousValue) !== getPrototype(propValue)) {
-        node[propName] = propValue
-        return
-    }
-
-    if (!isObject(node[propName])) {
-        node[propName] = {}
-    }
-
-    var replacer = propName === "style" ? "" : undefined
-
-    for (var k in propValue) {
-        var value = propValue[k]
-        node[propName][k] = (value === undefined) ? replacer : value
-    }
-}
-
 function members(node, members, previous) {
   var propName, propKey, propTree, keys
   
@@ -121,14 +95,4 @@ function members(node, members, previous) {
       applyProperties(propTree, keys[propKey], previous)
     } 
   }
-}
-
-function getPrototype(value) {
-    if (Object.getPrototypeOf) {
-        return Object.getPrototypeOf(value)
-    } else if (value.__proto__) {
-        return value.__proto__
-    } else if (value.constructor) {
-        return value.constructor.prototype
-    }
 }

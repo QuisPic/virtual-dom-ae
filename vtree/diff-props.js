@@ -24,7 +24,7 @@ function diffProps(a, b) {
             if (getPrototype(bValue) !== getPrototype(aValue)) {
                 diff = diff || {}
                 diff[aKey] = bValue
-            } else if (isHook(bValue)) {
+            } else if (aKey === 'hooks') {
                 diff = diff || {}
                 diff[aKey] = bValue
             } else if (aKey === 'keyframes') {

@@ -48,15 +48,15 @@ function walk(a, b, patch, index) {
                 apply = diffChildren(a, b, patch, apply, index)
             } else {
                 apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
-                applyClear = true
+                // applyClear = true
             }
         } else {
             apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
-            applyClear = true
+            // applyClear = true
         }
     } else if (isWidget(b)) {
         if (!isWidget(a)) {
-            applyClear = true
+            // applyClear = true
         }
 
         apply = appendPatch(apply, new VPatch(VPatch.WIDGET, a, b))
@@ -66,9 +66,9 @@ function walk(a, b, patch, index) {
         patch[index] = apply
     }
 
-    if (applyClear) {
-        clearState(a, patch, index)
-    }
+    // if (applyClear) {
+    //     clearState(a, patch, index)
+    // }
 }
 
 function diffChildren(a, b, patch, apply, index) {
@@ -114,7 +114,7 @@ function diffChildren(a, b, patch, apply, index) {
 
 function clearState(vNode, patch, index) {
     // TODO: Make this a single walk, not two
-    unhook(vNode, patch, index)
+    // unhook(vNode, patch, index)
     destroyWidgets(vNode, patch, index)
 }
 

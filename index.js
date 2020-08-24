@@ -11,5 +11,5 @@ module.exports = {
     h: h,
     create: create,
     VNode: VNode,
-    VText: VText
+    VText: VText,
 }
