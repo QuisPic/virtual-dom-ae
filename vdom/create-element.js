@@ -8,11 +8,12 @@ var handleThunk = require("../vnode/handle-thunk.js")
 module.exports = createElement
 
 function createElement(vnode, domParent) {
+    vnode = handleThunk(vnode).a
+
     var tagName = vnode.tagName
     var initial = vnode.initialProp
     var node, parent
     
-    vnode = handleThunk(vnode).a
     
     if (domParent) {
       parent = domParent.self()

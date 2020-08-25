@@ -145,7 +145,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
         if (getType(aValue) !== bType) {
           diff[propName] = bValue
         } else {
-          if (bType === 'object') {
+          if (bType === 'object' && bValue.all !== aValue.all) {
             diff[propName] = bValue
           } else if (bType === 'array') {
             for (var ai = 0, bi = 0, len = bValue.length; i < len; bi++) {

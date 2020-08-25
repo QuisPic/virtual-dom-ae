@@ -13,6 +13,12 @@ declare namespace AeVirtualDOM {
 
   type Tags = ItemsTags | LayersTags
 
+  interface Thunk {
+    type: string
+    render: (previuos: Thunk) => VNode<Tags>
+    vnode?: VNode<Tags>
+  }
+
   type ItemsTags = 
     | 'root'
     | 'comp'
@@ -620,7 +626,7 @@ declare namespace AeVirtualDOM {
       'ADBE Vector Shape - Ellipse'?: {
         [name: string]: VPropertyBase & {
           'ADBE Vector Shape Direction'?: VPropertyNotKeyframable<1 | 2 | 3>
-          'ADBE Vector Ellipse Size'?: VProperty<number[]>
+          'ADBE Vector Ellipse Size'?: VProperty<Iterable<number>>
           'ADBE Vector Ellipse Position'?: VProperty<number[]>
           hooks?: {
             [name: string]: VHook<PropertyGroup>
@@ -1259,13 +1265,7 @@ declare namespace AeVirtualDOM {
     destroy(node: AeNode): void;
   }
 
-  interface Thunk<T extends Tags> {
-    type: string; // 'Thunk'
-    vnode: VTree<T>;
-    render(previous: VTree<T>): VTree<T>;
-  }
-
-  type VTree<T extends Tags> = VNode<T> | Widget | Thunk<T>;
+  type VTree<T extends Tags> = VNode<T> | Widget | Thunk;
 
   // enum VPatch {
   //   NONE = 0,
@@ -1298,7 +1298,7 @@ declare namespace AeVirtualDOM {
 
   type VChild<T extends Tags> = VTree<T>[] | VTree<T>;
 
-  function create(vnode: VNode<Tags> | Widget | Thunk<Tags>): AeNode;
+  function create(vnode: VNode<Tags> | Widget | Thunk): AeNode;
 
   function h<T extends Tags>(
     tagName: T,
@@ -1317,7 +1317,7 @@ declare namespace AeVirtualDOM {
 
   function isVNode(vTree: VTree<Tags>): vTree is VNode<Tags>;
   function isWidget(vTree: VTree<Tags>): vTree is Widget;
-  function isThunk(vTree: VTree<Tags>): vTree is Thunk<Tags>;
+  function isThunk(vTree: VTree<Tags>): vTree is Thunk;
 }
 
 declare module "virtual-dom-ae/h" {

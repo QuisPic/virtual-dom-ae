@@ -1,4 +1,5 @@
 require('./object-key-polyfill')
+var isCollection = require('iterall').isCollection
 var isArray = require("x-is-array")
 var isObjectLiteral = require('./is-object-literal')
 

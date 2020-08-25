@@ -2,6 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         //"noLib": true,
+        "lib": ["ES2015"],
         "types": ["types-for-adobe/AfterEffects/2018"]
     },
     "exclude": ["node_modules"]
