@@ -13,16 +13,18 @@ declare namespace AeVirtualDOM {
 
   type Tags = ItemsTags | LayersTags
 
-  interface Thunk {
+  interface Thunk<T extends Tags> {
+    state?: any
     type: string
-    render: (previuos: Thunk) => VNode<Tags>
-    vnode?: VNode<Tags>
+    render: (previuos: Thunk<T>) => VNode<T>
+    vnode?: VNode<T>
   }
 
   type ItemsTags = 
     | 'root'
     | 'comp'
     | 'folder'
+    | 'avItem'
 
   type LayersTags =
     | 'avLayer'
@@ -38,6 +40,7 @@ declare namespace AeVirtualDOM {
     root: {}
     comp: CompItemProps
     folder: FolderItemProps
+    avItem: AVItemProps
     avLayer: AVLayerProps
     shape: ShapeLayerProps
     text: TextLayerProps
@@ -1265,7 +1268,7 @@ declare namespace AeVirtualDOM {
     destroy(node: AeNode): void;
   }
 
-  type VTree<T extends Tags> = VNode<T> | Widget | Thunk;
+  type VTree<T extends Tags> = VNode<T> | Widget | Thunk<T>;
 
   // enum VPatch {
   //   NONE = 0,
@@ -1298,7 +1301,7 @@ declare namespace AeVirtualDOM {
 
   type VChild<T extends Tags> = VTree<T>[] | VTree<T>;
 
-  function create(vnode: VNode<Tags> | Widget | Thunk): AeNode;
+  function create(vnode: VNode<Tags> | Widget | Thunk<Tags>): AeNode;
 
   function h<T extends Tags>(
     tagName: T,
@@ -1315,9 +1318,9 @@ declare namespace AeVirtualDOM {
 
   function patch<T extends AeNode>(rootNode: T, patches: VPatch[], renderOptions?: VPatchOptions<T>): T;
 
-  function isVNode(vTree: VTree<Tags>): vTree is VNode<Tags>;
+  function isVNode<T extends Tags>(vTree: VTree<T>): vTree is VNode<T>;
   function isWidget(vTree: VTree<Tags>): vTree is Widget;
-  function isThunk(vTree: VTree<Tags>): vTree is Thunk;
+  function isThunk<T extends Tags>(vTree: VTree<T>): vTree is Thunk<T>;
 }
 
 declare module "virtual-dom-ae/h" {

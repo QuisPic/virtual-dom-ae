@@ -36,7 +36,16 @@ function createElement(vnode, domParent) {
         } else {
           parent = app.project.items
         }
-        node = parent.addComp.apply(parent, initial)
+
+        if (typeof initial[0] === 'number') {
+          node = app.project.itemByID(initial[0])
+
+          if (initial[1] !== false) {
+            node.parentFolder = parent
+          }
+        } else {
+          node = parent.addComp.apply(parent, initial)
+        }
         break;
       case 'folder':
         if (parent) {
@@ -44,7 +53,28 @@ function createElement(vnode, domParent) {
         } else {
           parent = app.project.items
         }
-        node = parent.addFolder.apply(parent, initial)
+
+        if (typeof initial[0] === 'number') {
+          node = app.project.itemByID(initial[0])
+
+          if (initial[1] !== false) {
+            node.parentFolder = parent
+          }
+        } else {
+          node = parent.addFolder.apply(parent, initial)
+        }
+        break;
+      case 'avItem':
+        if (parent) {
+          parent = parent.items
+        } else {
+          parent = app.project.items
+        }
+        node = app.project.itemByID(initial)
+
+        if (initial[1] !== false) {
+          node.parentFolder = parent
+        }
         break;
       case 'avLayer':
         initial[0] = typeof initial[0] === 'number' ? app.project.itemByID(initial[0]) : initial[0]
