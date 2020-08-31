@@ -1,4 +1,5 @@
 var isObject = require("is-object")
+var isImmutable = require('immutable-ae').isImmutable
 var isObjectLiteral = require("./is-object-literal")
 var isHook = require("../vnode/is-vhook.js")
 var setKeys = require("./set-keyframes")
@@ -24,7 +25,8 @@ function applyProperties(node, props, previous) {
                   applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
                 }
             } else {
-                node(propName, propValue)
+              propValue = isImmutable(propValue) ? propValue.toJS() : propValue
+              node(propName, propValue)
             }
         }
     }

@@ -1,7 +1,6 @@
-var isObject = require("is-object")
-var isArray = require("x-is-array")
+var get = require("immutable-ae").get
+var isIterable = require("iterall").isIterable
 var isObjectLiteral = require("../vdom/is-object-literal")
-var isHook = require("../vnode/is-vhook")
 var arraySearch = require("./binary-search")
 
 module.exports = diffProps
@@ -72,50 +71,52 @@ function diffKeyframes(aKeyframes, bKeyframes) {
 
     if (aTimes && aValues) {
         if (!bTimes || !bValues) {
-            diff = { remove: [] }
+          diff = { remove: [] }
 
-            for (var i = 0, len = aTimes.length; i < len; i++) {
-              diff.remove.push(i)
-            }
+          var len = aTimes.size || aTimes.length
+          for (var i = 0; i < len; i++) {
+            diff.remove.push(i)
+          }
         } else if (aTimes !== bTimes || aValues !== bValues) {
           diff = { times: [], values: [] }
 
-          if (bTimes.length === bValues.length) {
-            var aLen = aTimes.length
-            var bLen = bTimes.length 
-            var ai, bi
+          var bLen = bTimes.size || bTimes.length 
+          var bValuesLen = bValues.size || bValues.length
+          if (bLen === bValuesLen) {
+            var aLen =  aTimes.size || aTimes.length
+            var ai = 0, bi = 0
             for (bi = 0, ai = 0; bi < bLen; bi++) {
-              if (aTimes[ai] === bTimes[bi]) {
-                if (aValues[ai] !== bValues[bi]) {
-                  diff.times.push(bTimes[bi])
-                  diff.values.push(bValues[bi])
+              if (get(aTimes, ai) === get(bTimes, bi)) {
+                if (get(aValues, ai) !== get(bValues, bi)) {
+                  diff.times.push(get(bTimes, bi))
+                  diff.values.push(get(bValues, bi))
                 }
                 ai++
               } else {
-                var aTime = aTimes[ai]
-                var bTime = bTimes[bi]
+                var aTime = get(aTimes, ai)
+                var bTime = get(bTimes, bi)
                 if (aTime < bTime && ai < aLen) {
                   diff.remove = diff.remove || []
                   while (aTime < bTime && ai < aLen) {
                     diff.remove.push(ai)
                     ai++
-                    aTime = aTimes[ai]
+                    aTime = get(aTimes, ai)
                   }
                 
                   if (aTime === bTime) {
-                    if (aValues[ai] !== bValues[bi]) {
+                    if (get(aValues, ai) !== get(bValues, bi)) {
                       diff.times.push(bTime)
-                      diff.values.push(bValues[bi])
+                      diff.values.push(get(bValues, bi))
                     }
                     ai++
                   } else {
                     diff.times.push(bTime)
-                    diff.values.push(bValues[bi])
+                    diff.values.push(get(bValues, bi))
                     addKeyframeProps(bi, keys, bKeyframes, diff)
                   }
                 } else {
                   diff.times.push(bTime)
-                  diff.values.push(bValues[bi])
+                  diff.values.push(get(bValues, bi))
                   addKeyframeProps(bi, keys, bKeyframes, diff)
                 }
               }
@@ -145,10 +146,11 @@ function diffKeyframes(aKeyframes, bKeyframes) {
         if (getType(aValue) !== bType) {
           diff[propName] = bValue
         } else {
-          if (bType === 'object' && bValue.all !== aValue.all) {
+          if (bType === 'object') {
             diff[propName] = bValue
-          } else if (bType === 'array') {
-            for (var ai = 0, bi = 0, len = bValue.length; i < len; bi++) {
+          } else if (bType === 'iterable') {
+            var len = bValue.size || bValue.length
+            for (var ai = 0, bi = 0; i < len; bi++) {
               while (arraySearch(diff.remove, ai, sortFunc) >= 0) {
                 ai++
               }
@@ -157,7 +159,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
                 continue;
               }
 
-              if (bValue[bi] !== aValue[ai]) {
+              if (get(bvalue, bi) !== get(aValue, ai)) {
                 diff[propName] = diff[propName] || []
                 diff[propName][bi] = bValue[bi]
               }
@@ -178,16 +180,16 @@ function addKeyframeProps(index, keys, props, diff) {
     if (isObjectLiteral(value)) {
       diff[key] = diff[key] || []
       diff[key][index] = value.all
-    } else if (isArray(value) && value[index]) {
+    } else if (isIterable(value) && get(value, index)) {
       diff[key] = diff[key] || []
-      diff[key][index] = value[index]
+      diff[key][index] = get(value, index)
     }
   }
 }
 
 function getType(obj) {
-  if (isArray(obj)) {
-    return 'array'
+  if (isIterable(obj)) {
+    return 'iterable'
   }
   if (isObjectLiteral(obj)) {
     return 'object'
