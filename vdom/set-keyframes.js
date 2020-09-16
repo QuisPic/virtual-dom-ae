@@ -21,9 +21,17 @@ function setKeyframes(node, keyframes) {
 
   times = isImmutable(times) ? times.toJS() : times
   values = immutableToJS(values)
+  const timesLength = times.length
 
-  if (isArray(times) && times.length > 0 && isArray(values) && values.length > 0) {
-    if (times.length === values.length) {
+  if (isArray(times) && timesLength > 0 && isArray(values) && values.length > 0) {
+    if (timesLength === values.length) {
+      const startTime = node.startTime
+      
+      if (startTime !== 0) {
+        for (let i = 0; i < timesLength; i++) {
+          times[i] += startTime
+        }
+      }
       node.setValuesAtTimes(times, values)
     } else {
       throw new Error('Keyframes times and values have different numbers of elements.')

@@ -3,7 +3,7 @@
 // Definitions by: Christopher Brown <https://github.com/chbrown>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-import { Map } from 'immutable-ae'
+import { OMap, Map } from 'immutable-ae'
 declare namespace AeVirtualDOM {
   type VHook<T extends AeNode, A = object> = A & {
     hook?(this: A, node: T, propertyName: string, previous?: VHook<T, A>): void;
@@ -15,10 +15,9 @@ declare namespace AeVirtualDOM {
   type Tags = ItemsTags | LayersTags
 
   interface Thunk<T extends Tags> {
-    state?: any
     type: string
-    render: (previuos: Thunk<T>) => VNode<T>
     vnode?: VNode<T>
+    render: (previuos?: any) => VNode<T>
   }
 
   type ItemsTags = 
@@ -274,7 +273,7 @@ declare namespace AeVirtualDOM {
     initial: number | AVItem | CompItem | FootageItem
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     'ADBE Time Remapping'?: VProperty<number>
 
@@ -287,7 +286,7 @@ declare namespace AeVirtualDOM {
     initial?: [[width: number, height: number]]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     hooks?: {
       [name: string]: VHook<TextLayer>
@@ -298,7 +297,7 @@ declare namespace AeVirtualDOM {
     initial: [name: string, centerPoint: Iterable<number>]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     'ADBE Transform Group'?: {
       selected?: boolean
@@ -349,10 +348,10 @@ declare namespace AeVirtualDOM {
       pixelAspect: number,
       duration: number,
       frameRate: number,
-    ]
+    ] | [itemId: number, moveToParent?: boolean]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     /** When true, indicates that the composition uses drop-frame timecode. */
     dropFrame?: boolean
@@ -433,10 +432,10 @@ declare namespace AeVirtualDOM {
 
   interface FolderItemProps extends ItemProps {
     /** The name of this folder. */
-    initial: string
+    initial: string | [itemId: number, moveToParent?: boolean]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     hooks?: {
       [name: string]: VHook<FolderItem>
@@ -528,7 +527,7 @@ declare namespace AeVirtualDOM {
     initial: [name: string, centerPoint: Iterable<number>]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     lightType?: LightType
     'ADBE Transform Group'?: {
@@ -571,7 +570,7 @@ declare namespace AeVirtualDOM {
     initial?: number
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     hooks?: {
       [name: string]: VHook<AVLayer>
@@ -580,7 +579,7 @@ declare namespace AeVirtualDOM {
 
   interface ShapeLayerProps extends AVLayerBaseProps {
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     'ADBE Root Vectors Group'?: VectorsGroup
 
@@ -944,7 +943,7 @@ declare namespace AeVirtualDOM {
     initial: [color: Iterable<number>, name: string, width: number, height: number, pixelAspect: number, duration?: number]
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     hooks?: {
       [name: string]: VHook<AVLayer>
@@ -1098,7 +1097,7 @@ declare namespace AeVirtualDOM {
     initial?: string
 
     /** Key for this element. */
-    key?: string
+    key?: string | number
 
     hooks?: {
       [name: string]: VHook<TextLayer>
@@ -1195,33 +1194,36 @@ declare namespace AeVirtualDOM {
       values?: Iterable<A>
 
       /** Sets the “in” and “out” temporal ease for keys. */
-      temporalEase?: Iterable<Iterable<KeyframeEase>> | { all: Iterable<KeyframeEase> } | Map<'all', Iterable<KeyframeEase>>
+      temporalEase?: Iterable<Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
+        | { all: Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>> }
+        | OMap<{ all: Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>> }>
+        // | Map<'all', Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
 
       /** Sets whether keyframes have temporal continuity. */
-      temporalContinuous?: Iterable<boolean> | { all: boolean } | Map<'all', boolean>
+      temporalContinuous?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
 
       /** Sets whether keyframes have temporal auto-Bezier. */
-      temporalAutoBezier?: Iterable<boolean> | { all: boolean } | Map<'all', boolean>
+      temporalAutoBezier?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
 
       /** Sets the “in” and “out” tangent vectors for keys. */
-      spatialTangents?: Iterable<Iterable<number>> | { all: Iterable<number> } | Map<'all', Iterable<number>>
+      spatialTangents?: Iterable<Iterable<number | Iterable<number>>> | { all: Iterable<number | Iterable<number>> } | OMap<{ all: Iterable<number | Iterable<number>> }>
 
       /** Sets whether keyframes have spatial auto-Bezier. */
-      spatialAutoBezier?: Iterable<boolean> | { all: boolean } | Map<'all', boolean>
+      spatialAutoBezier?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
 
       /** Sets whether keyframes have spatial continuity. */
-      spatialContinuous?: Iterable<boolean> | { all: boolean } | Map<'all', boolean>
+      spatialContinuous?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
 
       /** Sets the interpolation type for a key. */
       interpolationType?: Iterable<KeyframeInterpolationType | Iterable<KeyframeInterpolationType>>
         | { all: KeyframeInterpolationType | Iterable<KeyframeInterpolationType> }
-        | Map<'all', KeyframeInterpolationType | Iterable<KeyframeInterpolationType>>
+        | OMap<{ all: KeyframeInterpolationType | Iterable<KeyframeInterpolationType> }>
 
       /** Sets whether keyframes are roving. */
-      roving?: Iterable<boolean> | { all: boolean } |  Map<'all', boolean>
+      roving?: Iterable<boolean> | { all: boolean } |  OMap<{ all: boolean }>
 
       /** Sets whether keyframes are selected. */
-      selected?: Iterable<boolean> | { all: boolean } | Map<'all', boolean>
+      selected?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
     }
 
     hooks?: {
@@ -1238,13 +1240,13 @@ declare namespace AeVirtualDOM {
     }
   }
 
-  type ChildsTagNames<T extends ItemsTags> = T extends 'folder' | 'root' ? ItemsTags : LayersTags 
+  type ChildsTagNames<T extends Tags> = T extends 'folder' | 'root' ? ItemsTags : LayersTags 
 
   interface VNode<T extends Tags> {
     tagName: Tags;
     properties: VProperties[T];
     children: T extends ItemsTags ? Iterable<VTree<ChildsTagNames<T>>> : [];
-    key?: string;
+    key?: string | number;
     namespace?: string;
     count: number;
     hasWidgets: boolean;
@@ -1259,8 +1261,8 @@ declare namespace AeVirtualDOM {
     new (
       tagName: Tags,
       properties: VProperties,
-      children: typeof tagName extends ItemsTags ? Iterable<VTree<ChildsTagNames<typeof tagName>>> : [],
-      key?: string
+      children: Iterable<VTree<ChildsTagNames<typeof tagName>>>,
+      key?: string | number
     ): VNode<typeof tagName>;
   }
 
@@ -1298,7 +1300,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface createProperties {
-    key?: string;
+    key?: string | number;
     namespace?: string;
   }
 
@@ -1309,7 +1311,7 @@ declare namespace AeVirtualDOM {
   function h<T extends Tags>(
     tagName: T,
     properties?: VProperties[T],
-    children?: T extends ItemsTags ? Iterable<VChild<ChildsTagNames<T>>> : undefined
+    children?: Iterable<VChild<ChildsTagNames<T>>>
   ): VNode<T>;
 
   // function h<T extends Tags>(

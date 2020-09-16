@@ -30,7 +30,7 @@
         "error": "^4.3.0",
         "ev-store": "^7.0.0",
         "global": "^4.3.0",
-        "immutable-ae": "https://github.com/QuisPic/immutable-ae.git",
+        "immutable-ae": "file:.yalc/immutable-ae",
         "is-object": "^1.0.1",
         "iterall": "^1.3.0",
         "next-tick": "^0.2.2",

@@ -52,6 +52,17 @@ function removeProperty(node, propName, propValue, previous) {
 
         if (self) {
           if (!isHook(previousValue)) {
+            if (propName === 'keyframes') {
+              var keyframes = previousValue
+              if (keyframes.hasOwnProperty('remove')) {
+                var remove = keyframes.remove
+                remove = isImmutable(remove) ? remove.toJS() : remove
+            
+                for (var i = remove.length - 1; i >= 0; i--) {
+                  self.removeKey(remove[i] + 1)
+                }
+              }
+            } else {
               var prop = self[propName]
 
               if (isObject(prop)
@@ -65,6 +76,7 @@ function removeProperty(node, propName, propValue, previous) {
                     delete node[propName]
                   }
               }
+            }
           } else if (previousValue.unhook) {
               previousValue.unhook(self, propName, propValue)
           }

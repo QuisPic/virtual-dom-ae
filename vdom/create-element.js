@@ -9,7 +9,7 @@ var handleThunk = require("../vnode/handle-thunk.js")
 
 module.exports = createElement
 
-function createElement(vnode, domParent) {
+function createElement(vnode, domParent, layerParent) {
     vnode = handleThunk(vnode).a
 
     var tagName = vnode.tagName
@@ -42,49 +42,43 @@ function createElement(vnode, domParent) {
         node = app.project.items
         break;
       case 'comp':
-        if (parent) {
-          parent = parent.items
-        } else {
-          parent = app.project.items
+        if (!parent) {
+          parent = app.project
         }
 
         if (typeof initial[0] === 'number') {
           node = app.project.itemByID(initial[0])
 
           if (initial[1] !== false) {
-            node.parentFolder = parent
+            node.parentFolder = parent === app.project ? parent.rootFolder : parent
           }
         } else {
-          node = parent.addComp.apply(parent, initial)
+          node = parent.items.addComp.apply(parent.items, initial)
         }
         break;
       case 'folder':
-        if (parent) {
-          parent = parent.items
-        } else {
-          parent = app.project.items
+        if (!parent) {
+          parent = app.project
         }
 
         if (typeof initial[0] === 'number') {
           node = app.project.itemByID(initial[0])
 
           if (initial[1] !== false) {
-            node.parentFolder = parent
+            node.parentFolder = parent === app.project ? parent.rootFolder : parent
           }
         } else {
-          node = parent.addFolder.apply(parent, initial)
+          node = parent.items.addFolder.apply(parent.items, initial)
         }
         break;
       case 'avItem':
-        if (parent) {
-          parent = parent.items
-        } else {
-          parent = app.project.items
+        if (!parent) {
+          parent = app.project
         }
         node = app.project.itemByID(initial)
 
         if (initial[1] !== false) {
-          node.parentFolder = parent
+          node.parentFolder = parent === app.project ? parent.rootFolder : parent
         }
         break;
       case 'avLayer':
@@ -124,17 +118,36 @@ function createElement(vnode, domParent) {
         throw new Error('Unknown element name: ' + tagName);
     }
 
+    if (layerParent) {
+      node.parent = layerParent
+    }
+
     var domTree = createDomTree(node, domParent)
     var props = vnode.properties
     applyProperties(domTree, props)
 
     var children = vnode.children
+    var len = children.length
 
-    for (var i = 0, len = children.length; i < len; i++) {
-        var childNode = createElement(children[i], domTree)
-        if (childNode) {
-            domTree.childNodes.push(childNode)
-        }
+    if (len > 0) {
+      var nextDomParent, nextLayerParent
+
+      if (tagName === 'root'
+        || tagName === 'comp'
+        || tagName === 'folder'
+        || tagName === 'avItem') {
+          nextDomParent = domTree
+      } else {
+        nextDomParent = parent
+        nextLayerParent = domTree
+      }
+
+      for (var i = 0; i < len; i++) {
+          var childNode = createElement(children[i], nextDomParent, nextLayerParent ? nextLayerParent.self() : undefined)
+          if (childNode) {
+              domTree.childNodes.push(childNode)
+          }
+      }
     }
 
     return domTree
