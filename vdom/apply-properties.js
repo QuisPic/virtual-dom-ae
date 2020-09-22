@@ -6,7 +6,7 @@ var setKeys = require("./set-keyframes")
 
 module.exports = applyProperties
 
-function applyProperties(node, props, previous) {
+function applyProperties(node, props, previous, startNode) {
     var hooks
     for (var propName in props) {
         var propValue = props[propName]
@@ -16,13 +16,13 @@ function applyProperties(node, props, previous) {
         } else {
             if (isObjectLiteral(propValue)) {
                 if (propName === 'keyframes') {
-                  setKeys(node.self(), propValue)
+                  setKeys(node.self(), propValue, startNode)
                 } else if (propName === 'members') {
-                  members(node, propValue, previous ? previous[propName] : undefined)
+                  members(node, propValue, previous ? previous[propName] : undefined, startNode)
                 } else if (propName === 'hooks') {
                   hooks = propValue
                 } else {
-                  applyProperties(node(propName), propValue, previous ? previous[propName] : undefined)
+                  applyProperties(node(propName), propValue, previous ? previous[propName] : undefined, startNode)
                 }
             } else {
               propValue = isImmutable(propValue) ? propValue.toJS() : propValue
@@ -84,7 +84,7 @@ function removeProperty(node, propName, propValue, previous) {
     }
 }
 
-function members(node, members, previous) {
+function members(node, members, previous, startNode) {
   var propName, propKey, propTree, keys
   
   for (propName in members) {
@@ -106,7 +106,7 @@ function members(node, members, previous) {
         previous = undefined
       }
 
-      applyProperties(propTree, keys[propKey], previous)
+      applyProperties(propTree, keys[propKey], previous, startNode)
     } 
   }
 }

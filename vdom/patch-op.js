@@ -25,7 +25,7 @@ function applyPatch(vpatch, domNode, renderOptions) {
             reorderChildren(domNode, patch);
             return domNode
         case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties);
+            applyProperties(domNode, patch, vNode.properties, domNode);
             return domNode
         case VPatch.THUNK:
             return replaceRoot(domNode,
@@ -154,7 +154,14 @@ function reorderChildren(domNode, moves) {
       childNodes.splice(insert.to, 0, node)
 
       var self = node.self()
-      if (self) {
+      if (self && (
+           self instanceof AVLayer
+        || self instanceof ShapeLayer
+        || self instanceof TextLayer
+        || self instanceof CameraLayer
+        || self instanceof LightLayer
+        || self instanceof Layer
+      )) {
         if (insert.to >= childNodes.length - 1) {
           self.moveToEnd()
         } else if (insert.to <= 0) {

@@ -3,7 +3,7 @@
 // Definitions by: Christopher Brown <https://github.com/chbrown>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-import { OMap, Map } from 'immutable-ae'
+import { OMap } from 'immutable-ae'
 declare namespace AeVirtualDOM {
   type VHook<T extends AeNode, A = object> = A & {
     hook?(this: A, node: T, propertyName: string, previous?: VHook<T, A>): void;
@@ -348,7 +348,7 @@ declare namespace AeVirtualDOM {
       pixelAspect: number,
       duration: number,
       frameRate: number,
-    ] | [itemId: number, moveToParent?: boolean]
+    ] | [itemId: number, moveToParent?: boolean] | number
 
     /** Key for this element. */
     key?: string | number
@@ -1194,9 +1194,9 @@ declare namespace AeVirtualDOM {
       values?: Iterable<A>
 
       /** Sets the “in” and “out” temporal ease for keys. */
-      temporalEase?: Iterable<Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
-        | { all: Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>> }
-        | OMap<{ all: Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>> }>
+      temporalEase?: Iterable<Iterable<KeyframeEase | Iterable<KeyframeEase>>>
+        | { all: Iterable<KeyframeEase | Iterable<KeyframeEase>> }
+        | OMap<{ all: Iterable<KeyframeEase | Iterable<KeyframeEase>> }>
         // | Map<'all', Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
 
       /** Sets whether keyframes have temporal continuity. */

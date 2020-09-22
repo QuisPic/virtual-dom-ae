@@ -9,12 +9,12 @@ var handleThunk = require("../vnode/handle-thunk.js")
 
 module.exports = createElement
 
-function createElement(vnode, domParent, layerParent) {
+function createElement(vnode, domParent) {
     vnode = handleThunk(vnode).a
 
     var tagName = vnode.tagName
     var initial = vnode.initialProp
-    var node, parent
+    var node, parent, layerParent
 
     if (isImmutable(initial)) {
       initial = initial.toJS()
@@ -28,6 +28,16 @@ function createElement(vnode, domParent, layerParent) {
     
     if (domParent) {
       parent = domParent.self()
+
+      if (parent instanceof AVLayer
+       || parent instanceof ShapeLayer
+       || parent instanceof TextLayer
+       || parent instanceof CameraLayer
+       || parent instanceof LightLayer
+       || parent instanceof Layer) {
+         layerParent = parent
+         parent = parent.containingComp
+       }
     }
 
     if (isWidget(vnode)) {
@@ -46,7 +56,9 @@ function createElement(vnode, domParent, layerParent) {
           parent = app.project
         }
 
-        if (typeof initial[0] === 'number') {
+        if (typeof initial === 'number') {
+          node = app.project.itemByID(initial)
+        } else if (typeof initial[0] === 'number') {
           node = app.project.itemByID(initial[0])
 
           if (initial[1] !== false) {
@@ -124,26 +136,14 @@ function createElement(vnode, domParent, layerParent) {
 
     var domTree = createDomTree(node, domParent)
     var props = vnode.properties
-    applyProperties(domTree, props)
+    applyProperties(domTree, props, undefined, domTree)
 
     var children = vnode.children
     var len = children.length
 
     if (len > 0) {
-      var nextDomParent, nextLayerParent
-
-      if (tagName === 'root'
-        || tagName === 'comp'
-        || tagName === 'folder'
-        || tagName === 'avItem') {
-          nextDomParent = domTree
-      } else {
-        nextDomParent = parent
-        nextLayerParent = domTree
-      }
-
       for (var i = 0; i < len; i++) {
-          var childNode = createElement(children[i], nextDomParent, nextLayerParent ? nextLayerParent.self() : undefined)
+          var childNode = createElement(children[i], domTree)
           if (childNode) {
               domTree.childNodes.push(childNode)
           }

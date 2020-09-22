@@ -6,7 +6,7 @@ var isObjectLiteral = require('./is-object-literal')
 
 module.exports = setKeyframes
 
-function setKeyframes(node, keyframes) {
+function setKeyframes(node, keyframes, layerNode) {
   if (keyframes.hasOwnProperty('remove')) {
     var remove = keyframes.remove
     remove = isImmutable(remove) ? remove.toJS() : remove
@@ -25,11 +25,14 @@ function setKeyframes(node, keyframes) {
 
   if (isArray(times) && timesLength > 0 && isArray(values) && values.length > 0) {
     if (timesLength === values.length) {
-      const startTime = node.startTime
-      
-      if (startTime !== 0) {
-        for (let i = 0; i < timesLength; i++) {
-          times[i] += startTime
+      const layer = layerNode.self()
+      if (layer) {
+        const startTime = layer.startTime
+        
+        if (startTime) {
+          for (let i = 0; i < timesLength; i++) {
+            times[i] += startTime
+          }
         }
       }
       node.setValuesAtTimes(times, values)

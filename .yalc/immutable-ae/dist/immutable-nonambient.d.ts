@@ -1389,7 +1389,7 @@ import { L, Any, Iteration } from 'ts-toolbelt'
     : T extends  OrderedMap<infer K, infer V>
       ? { [I in K]: V }
       : T extends Record<infer V>
-        ? { [I in keyof V]: V[I] }
+        ? V
         : T extends List<infer V>
           ? V[]
           : T

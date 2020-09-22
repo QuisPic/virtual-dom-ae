@@ -1,9 +1,12 @@
-var get = require("immutable-ae").get
+var immutable = require("immutable-ae")
 var isIterable = require("iterall").isIterable
 var isObjectLiteral = require("../vdom/is-object-literal")
 var arraySearch = require("./binary-search")
 
 module.exports = diffProps
+
+var get = immutable.get
+var isMap = immutable.isMap
 
 function diffProps(a, b) {
     var diff
@@ -150,7 +153,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
             diff[propName] = bValue
           } else if (bType === 'iterable') {
             var len = bValue.size || bValue.length
-            for (var ai = 0, bi = 0; i < len; bi++) {
+            for (var ai = 0, bi = 0; bi < len; bi++) {
               while (arraySearch(diff.remove, ai, sortFunc) >= 0) {
                 ai++
               }
@@ -159,7 +162,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
                 continue;
               }
 
-              if (get(bvalue, bi) !== get(aValue, ai)) {
+              if (get(bValue, bi) !== get(aValue, ai)) {
                 diff[propName] = diff[propName] || []
                 diff[propName][bi] = bValue[bi]
               }
@@ -188,12 +191,14 @@ function addKeyframeProps(index, keys, props, diff) {
 }
 
 function getType(obj) {
+  if (isMap(obj) || isObjectLiteral(obj)) {
+    return 'object'
+  }
+
   if (isIterable(obj)) {
     return 'iterable'
   }
-  if (isObjectLiteral(obj)) {
-    return 'object'
-  }
+
   return 'other'
 }
 
