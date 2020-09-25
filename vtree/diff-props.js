@@ -6,7 +6,7 @@ var arraySearch = require("./binary-search")
 module.exports = diffProps
 
 var get = immutable.get
-var isMap = immutable.isMap
+var Map = immutable.Map
 
 function diffProps(a, b) {
     var diff
@@ -191,7 +191,7 @@ function addKeyframeProps(index, keys, props, diff) {
 }
 
 function getType(obj) {
-  if (isMap(obj) || isObjectLiteral(obj)) {
+  if (Map.isMap(obj) || isObjectLiteral(obj)) {
     return 'object'
   }
 
