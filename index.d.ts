@@ -3,7 +3,6 @@
 // Definitions by: Christopher Brown <https://github.com/chbrown>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-import { OMap } from 'immutable-ae'
 declare namespace AeVirtualDOM {
   type VHook<T extends AeNode, A = object> = A & {
     hook?(this: A, node: T, propertyName: string, previous?: VHook<T, A>): void;
@@ -1196,34 +1195,32 @@ declare namespace AeVirtualDOM {
       /** Sets the “in” and “out” temporal ease for keys. */
       temporalEase?: Iterable<Iterable<KeyframeEase | Iterable<KeyframeEase>>>
         | { all: Iterable<KeyframeEase | Iterable<KeyframeEase>> }
-        | OMap<{ all: Iterable<KeyframeEase | Iterable<KeyframeEase>> }>
         // | Map<'all', Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
 
       /** Sets whether keyframes have temporal continuity. */
-      temporalContinuous?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
+      temporalContinuous?: Iterable<boolean> | { all: boolean } 
 
       /** Sets whether keyframes have temporal auto-Bezier. */
-      temporalAutoBezier?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
+      temporalAutoBezier?: Iterable<boolean> | { all: boolean } 
 
       /** Sets the “in” and “out” tangent vectors for keys. */
-      spatialTangents?: Iterable<Iterable<number | Iterable<number>>> | { all: Iterable<number | Iterable<number>> } | OMap<{ all: Iterable<number | Iterable<number>> }>
+      spatialTangents?: Iterable<Iterable<number | Iterable<number>>> | { all: Iterable<number | Iterable<number>> }
 
       /** Sets whether keyframes have spatial auto-Bezier. */
-      spatialAutoBezier?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
+      spatialAutoBezier?: Iterable<boolean> | { all: boolean } 
 
       /** Sets whether keyframes have spatial continuity. */
-      spatialContinuous?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
+      spatialContinuous?: Iterable<boolean> | { all: boolean } 
 
       /** Sets the interpolation type for a key. */
       interpolationType?: Iterable<KeyframeInterpolationType | Iterable<KeyframeInterpolationType>>
         | { all: KeyframeInterpolationType | Iterable<KeyframeInterpolationType> }
-        | OMap<{ all: KeyframeInterpolationType | Iterable<KeyframeInterpolationType> }>
 
       /** Sets whether keyframes are roving. */
-      roving?: Iterable<boolean> | { all: boolean } |  OMap<{ all: boolean }>
+      roving?: Iterable<boolean> | { all: boolean } 
 
       /** Sets whether keyframes are selected. */
-      selected?: Iterable<boolean> | { all: boolean } | OMap<{ all: boolean }>
+      selected?: Iterable<boolean> | { all: boolean } 
     }
 
     hooks?: {

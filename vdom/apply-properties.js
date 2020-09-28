@@ -1,5 +1,4 @@
 var isObject = require("is-object")
-var isImmutable = require('immutable-ae').isImmutable
 var isObjectLiteral = require("./is-object-literal")
 var isHook = require("../vnode/is-vhook.js")
 var setKeys = require("./set-keyframes")
@@ -25,7 +24,6 @@ function applyProperties(node, props, previous, startNode) {
                   applyProperties(node(propName), propValue, previous ? previous[propName] : undefined, startNode)
                 }
             } else {
-              propValue = isImmutable(propValue) ? propValue.toJS() : propValue
               node(propName, propValue)
             }
         }
@@ -56,7 +54,6 @@ function removeProperty(node, propName, propValue, previous) {
               var keyframes = previousValue
               if (keyframes.hasOwnProperty('remove')) {
                 var remove = keyframes.remove
-                remove = isImmutable(remove) ? remove.toJS() : remove
             
                 for (var i = remove.length - 1; i >= 0; i--) {
                   self.removeKey(remove[i] + 1)

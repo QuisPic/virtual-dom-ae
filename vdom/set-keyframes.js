@@ -1,6 +1,5 @@
 require('./object-keys-polyfill')
 var forEach = require('iterall').forEach
-var isImmutable = require('immutable-ae').isImmutable
 var isArray = require('x-is-array')
 var isObjectLiteral = require('./is-object-literal')
 
@@ -9,7 +8,6 @@ module.exports = setKeyframes
 function setKeyframes(node, keyframes, layerNode) {
   if (keyframes.hasOwnProperty('remove')) {
     var remove = keyframes.remove
-    remove = isImmutable(remove) ? remove.toJS() : remove
 
     for (var i = remove.length - 1; i >= 0; i--) {
       node.removeKey(remove[i] + 1)
@@ -19,8 +17,6 @@ function setKeyframes(node, keyframes, layerNode) {
   var times = keyframes.times
   var values = keyframes.values
 
-  times = isImmutable(times) ? times.toJS() : times
-  values = immutableToJS(values)
   const timesLength = times.length
 
   if (isArray(times) && timesLength > 0 && isArray(values) && values.length > 0) {
@@ -79,8 +75,6 @@ function setKeyframes(node, keyframes, layerNode) {
 }
 
 function setKeyframesParameter(methodName, node, value) {
-  value = isImmutable(value) ? value.toJS() : value
-
   if (isObjectLiteral(value)) {
     var valueAll = value.all
     for (var i = 1, len = node.numKeys; i <= len; i++) {
@@ -95,8 +89,6 @@ function setKeyframesParameter(methodName, node, value) {
 }
 
 function setTemporalEase(node, value) {
-  value = immutableToJS(value)
-
   if (isObjectLiteral(value)) {
     var valueAll = value.all
     if (valueAll[0] instanceof KeyframeEase) {
@@ -124,8 +116,6 @@ function setTemporalEase(node, value) {
 }
 
 function setSpatialTangents(node, value) {
-  value = immutableToJS(value)
-
   if (isObjectLiteral(value)) {
     var valueAll = value.all
     if (typeof valueAll[0] === 'number') {
@@ -152,8 +142,6 @@ function setSpatialTangents(node, value) {
 }
 
 function setInterpolationType(node, value) {
-  value = immutableToJS(value)
-
   if (isObjectLiteral(value)) {
     var valueAll = value.all
     if (typeof valueAll === 'number') {
@@ -179,20 +167,20 @@ function setInterpolationType(node, value) {
   }
 }
 
-function immutableToJS(values) {
-  if (isImmutable(values)) {
-    values = values.toJS()
-  } else if (isObjectLiteral(values)) {
-    if (isImmutable(values.all)) {
-      values.all = values.all.toJS()
-    }
-  } else {
-    forEach(values, function (val, i, collection) {
-      if (isImmutable(val)) {
-        collection[i] = val.toJS()
-      }
-    })
-  }
+// function immutableToJS(values) {
+//   if (isImmutable(values)) {
+//     values = values.toJS()
+//   } else if (isObjectLiteral(values)) {
+//     if (isImmutable(values.all)) {
+//       values.all = values.all.toJS()
+//     }
+//   } else {
+//     forEach(values, function (val, i, collection) {
+//       if (isImmutable(val)) {
+//         collection[i] = val.toJS()
+//       }
+//     })
+//   }
 
-  return values
-}
+//   return values
+// }

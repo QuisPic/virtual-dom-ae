@@ -1,5 +1,3 @@
-var isImmutable = require("immutable-ae").isImmutable
-var forEach = require("iterall").forEach
 var applyProperties = require("./apply-properties")
 var createDomTree = require("./create-dom-tree")
 
@@ -15,16 +13,6 @@ function createElement(vnode, domParent) {
     var tagName = vnode.tagName
     var initial = vnode.initialProp
     var node, parent, layerParent
-
-    if (isImmutable(initial)) {
-      initial = initial.toJS()
-    } else {
-      forEach(initial, function (val, i, collection) {
-        if (isImmutable(val)) {
-          collection[i] = val.toJS()
-        }
-      })
-    }
     
     if (domParent) {
       parent = domParent.self()
