@@ -14,7 +14,7 @@ function applyProperties(node, props, previous, startNode) {
             removeProperty(node, propName, propValue, previous)
         } else {
             if (isObjectLiteral(propValue)) {
-                if (propName === 'keyframes') {
+                if (propName === 'value') {
                   setKeys(node.self(), propValue, startNode)
                 } else if (propName === 'members') {
                   members(node, propValue, previous ? previous[propName] : undefined, startNode)
@@ -50,29 +50,18 @@ function removeProperty(node, propName, propValue, previous) {
 
         if (self) {
           if (!isHook(previousValue)) {
-            if (propName === 'keyframes') {
-              var keyframes = previousValue
-              if (keyframes.hasOwnProperty('remove')) {
-                var remove = keyframes.remove
-            
-                for (var i = remove.length - 1; i >= 0; i--) {
-                  self.removeKey(remove[i] + 1)
+            var prop = self[propName]
+
+            if (isObject(prop)
+              && (prop instanceof Property
+              || prop instanceof PropertyGroup)
+              && (prop.parentProperty.propertyType === PropertyType.INDEXED_GROUP
+              || prop.parentProperty.matchName === 'ADBE Text Animator')) {
+                prop.remove()
+
+                if (node.hasOwnProperty(propName)) {
+                  delete node[propName]
                 }
-              }
-            } else {
-              var prop = self[propName]
-
-              if (isObject(prop)
-                && (prop instanceof Property
-                || prop instanceof PropertyGroup)
-                && (prop.parentProperty.propertyType === PropertyType.INDEXED_GROUP
-                || prop.parentProperty.matchName === 'ADBE Text Animator')) {
-                  prop.remove()
-
-                  if (node.hasOwnProperty(propName)) {
-                    delete node[propName]
-                  }
-              }
             }
           } else if (previousValue.unhook) {
               previousValue.unhook(self, propName, propValue)

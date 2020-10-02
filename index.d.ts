@@ -109,7 +109,7 @@ declare namespace AeVirtualDOM {
 
     /** Sets a solid as a proxy for the item. */
     setProxyWithSolid?: [
-      color: Iterable<number>,
+      color: Array<number>,
       name: string,
       width: number,
       height: number,
@@ -185,7 +185,7 @@ declare namespace AeVirtualDOM {
             name?: string
             selected?: boolean
             moveTo?: number
-            color?: Iterable<number>
+            color?: Array<number>
             inverted?: boolean
             locked?: boolean
             maskFeatherFalloff?: number
@@ -193,7 +193,7 @@ declare namespace AeVirtualDOM {
             maskMotionBlur?: number
             rotoBezier?: boolean
             'ADBE Mask Shape'?: VProperty<Shape>
-            'ADBE Mask Feather'?: VProperty<Iterable<number>>
+            'ADBE Mask Feather'?: VProperty<Array<number>>
             'ADBE Mask Opacity'?: VProperty<number>
             'ADBE Mask Offset'?: VProperty<number>
             hooks?: {
@@ -244,16 +244,16 @@ declare namespace AeVirtualDOM {
     }
     'ADBE Transform Group'?: {
       selected?: boolean
-      'ADBE Anchor Point'?: VProperty<Iterable<number>>
-      'ADBE Position'?: VProperty<Iterable<number>>
+      'ADBE Anchor Point'?: VProperty<Array<number>>
+      'ADBE Position'?: VProperty<Array<number>>
       'ADBE Position_0'?: VProperty<number>
       'ADBE Position_1'?: VProperty<number>
       'ADBE Position_2'?: VProperty<number>
-      'ADBE Scale'?: VProperty<Iterable<number>>
+      'ADBE Scale'?: VProperty<Array<number>>
       'ADBE Rotate X'?: VProperty<number>
       'ADBE Rotate Y'?: VProperty<number>
       'ADBE Rotate Z'?: VProperty<number>
-      'ADBE Orientation'?: VProperty<Iterable<number>>
+      'ADBE Orientation'?: VProperty<Array<number>>
       'ADBE Opacity'?: VProperty<number>
       hooks?: {
         [name: string]: VHook<PropertyGroup>
@@ -293,23 +293,23 @@ declare namespace AeVirtualDOM {
   }
 
   interface CameraLayerProps extends LayerProps {
-    initial: [name: string, centerPoint: Iterable<number>]
+    initial: [name: string, centerPoint: Array<number>]
 
     /** Key for this element. */
     key?: string | number
 
     'ADBE Transform Group'?: {
       selected?: boolean
-      'ADBE Anchor Point'?: VProperty<Iterable<number>>
-      'ADBE Position'?: VProperty<Iterable<number>>
+      'ADBE Anchor Point'?: VProperty<Array<number>>
+      'ADBE Position'?: VProperty<Array<number>>
       'ADBE Position_0'?: VProperty<number>
       'ADBE Position_1'?: VProperty<number>
       'ADBE Position_2'?: VProperty<number>
-      'ADBE Scale'?: VProperty<Iterable<number>>
+      'ADBE Scale'?: VProperty<Array<number>>
       'ADBE Rotate X'?: VProperty<number>
       'ADBE Rotate Y'?: VProperty<number>
       'ADBE Rotate Z'?: VProperty<number>
-      'ADBE Orientation'?: VProperty<Iterable<number>>
+      'ADBE Orientation'?: VProperty<Array<number>>
       'ADBE Opacity'?: VProperty<number>
       hooks?: {
         [name: string]: VHook<PropertyGroup>
@@ -380,7 +380,7 @@ declare namespace AeVirtualDOM {
     preserveNestedResolution?: boolean
 
     /** The background color of the composition. */
-    bgColor?: Iterable<number>
+    bgColor?: Array<number>
 
     /** Changes the display of the start time in the Timeline panel. */
     displayStartTime?: number
@@ -389,7 +389,7 @@ declare namespace AeVirtualDOM {
     displayStartFrame?: number
 
     /** The factor by which the x and y resolution of the Composition panel is downsampled. */
-    resolutionFactor?: Iterable<number>
+    resolutionFactor?: Array<number>
 
     /** The camera shutter angle. */
     shutterAngle?: number
@@ -523,7 +523,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface LightLayerProps extends LayerProps {
-    initial: [name: string, centerPoint: Iterable<number>]
+    initial: [name: string, centerPoint: Array<number>]
 
     /** Key for this element. */
     key?: string | number
@@ -531,16 +531,16 @@ declare namespace AeVirtualDOM {
     lightType?: LightType
     'ADBE Transform Group'?: {
       selected?: boolean
-      'ADBE Anchor Point'?: VProperty<Iterable<number>>
-      'ADBE Position'?: VProperty<Iterable<number>>
+      'ADBE Anchor Point'?: VProperty<Array<number>>
+      'ADBE Position'?: VProperty<Array<number>>
       'ADBE Position_0'?: VProperty<number>
       'ADBE Position_1'?: VProperty<number>
       'ADBE Position_2'?: VProperty<number>
-      'ADBE Scale'?: VProperty<Iterable<number>>
+      'ADBE Scale'?: VProperty<Array<number>>
       'ADBE Rotate X'?: VProperty<number>
       'ADBE Rotate Y'?: VProperty<number>
       'ADBE Rotate Z'?: VProperty<number>
-      'ADBE Orientation'?: VProperty<Iterable<number>>
+      'ADBE Orientation'?: VProperty<Array<number>>
       'ADBE Opacity'?: VProperty<number>
       hooks?: {
         [name: string]: VHook<PropertyGroup>
@@ -549,7 +549,7 @@ declare namespace AeVirtualDOM {
     'ADBE Light Options Group'?: {
       selected?: boolean
       "ADBE Light Intensity"?: VProperty<number>
-      "ADBE Light Color"?: VProperty<Iterable<number>>
+      "ADBE Light Color"?: VProperty<Array<number>>
       "ADBE Light Cone Angle"?: VProperty<number>
       "ADBE Light Cone Feather 2"?: VProperty<number>
       "ADBE Light Falloff Type"?: VProperty<1 | 2 | 3>
@@ -595,9 +595,9 @@ declare namespace AeVirtualDOM {
           'ADBE Vectors Group'?: VectorsGroup
           'ADBE Vector Transform Group'?: {
             selected?: boolean
-            'ADBE Vector Anchor'?: VProperty<Iterable<number>>
-            'ADBE Vector Position'?: VProperty<Iterable<number>>
-            'ADBE Vector Scale'?: VProperty<Iterable<number>>
+            'ADBE Vector Anchor'?: VProperty<Array<number>>
+            'ADBE Vector Position'?: VProperty<Array<number>>
+            'ADBE Vector Scale'?: VProperty<Array<number>>
             'ADBE Vector Skew'?: VProperty<number>
             'ADBE Vector Skew Axis'?: VProperty<number>
             'ADBE Vector Rotation'?: VProperty<number>
@@ -617,8 +617,8 @@ declare namespace AeVirtualDOM {
       'ADBE Vector Shape - Rect'?: {
         [name: string]: VPropertyBase & {
           'ADBE Vector Shape Direction'?: VPropertyNotKeyframable<1 | 2 | 3>
-          'ADBE Vector Rect Size'?: VProperty<Iterable<number>>
-          'ADBE Vector Rect Position'?: VProperty<Iterable<number>>
+          'ADBE Vector Rect Size'?: VProperty<Array<number>>
+          'ADBE Vector Rect Position'?: VProperty<Array<number>>
           'ADBE Vector Rect Roundness'?: VProperty<number>
           hooks?: {
             [name: string]: VHook<PropertyGroup>
@@ -628,8 +628,8 @@ declare namespace AeVirtualDOM {
       'ADBE Vector Shape - Ellipse'?: {
         [name: string]: VPropertyBase & {
           'ADBE Vector Shape Direction'?: VPropertyNotKeyframable<1 | 2 | 3>
-          'ADBE Vector Ellipse Size'?: VProperty<Iterable<number>>
-          'ADBE Vector Ellipse Position'?: VProperty<Iterable<number>>
+          'ADBE Vector Ellipse Size'?: VProperty<Array<number>>
+          'ADBE Vector Ellipse Position'?: VProperty<Array<number>>
           hooks?: {
             [name: string]: VHook<PropertyGroup>
           }
@@ -640,7 +640,7 @@ declare namespace AeVirtualDOM {
           'ADBE Vector Shape Direction'?: VPropertyNotKeyframable<1 | 2 | 3>
           'ADBE Vector Star Type'?: VPropertyNotKeyframable<number>
           'ADBE Vector Star Points'?: VProperty<number>
-          'ADBE Vector Star Position'?: VProperty<Iterable<number>>
+          'ADBE Vector Star Position'?: VProperty<Array<number>>
           'ADBE Vector Star Rotation'?: VProperty<number>
           'ADBE Vector Star Inner Radius'?: VProperty<number>
           'ADBE Vector Star Outer Radius'?: VProperty<number>
@@ -710,7 +710,7 @@ declare namespace AeVirtualDOM {
       'ADBE Vector Filter - Twist'?: {
         [name: string]: VPropertyBase & {
           'ADBE Vector Twist Angle'?: VProperty<number>
-          'ADBE Vector Twist Center'?: VProperty<Iterable<number>>
+          'ADBE Vector Twist Center'?: VProperty<Array<number>>
           hooks?: {
             [name: string]: VHook<PropertyGroup>
           }
@@ -742,7 +742,7 @@ declare namespace AeVirtualDOM {
             selected?: boolean
             'ADBE Vector Wiggler Anchor'?: VProperty<number>
             'ADBE Vector Wiggler Position'?: VProperty<number>
-            'ADBE Vector Wiggler Scale'?: VProperty<Iterable<number>>
+            'ADBE Vector Wiggler Scale'?: VProperty<Array<number>>
             'ADBE Vector Wiggler Rotation'?: VProperty<number>
             hooks?: {
               [name: string]: VHook<PropertyGroup>
@@ -768,8 +768,8 @@ declare namespace AeVirtualDOM {
           'ADBE Vector Blend Mode'?: VPropertyNotKeyframable<number>
           'ADBE Vector Composite Order'?: VPropertyNotKeyframable<1 | 2>
           'ADBE Vector Grad Type'?: VPropertyNotKeyframable<1 | 2>
-          'ADBE Vector Grad Start Pt'?: VProperty<Iterable<number>>
-          'ADBE Vector Grad End Pt'?: VProperty<Iterable<number>>
+          'ADBE Vector Grad Start Pt'?: VProperty<Array<number>>
+          'ADBE Vector Grad End Pt'?: VProperty<Array<number>>
           'ADBE Vector Grad HiLite Length'?: VProperty<number>
           'ADBE Vector Grad Colors'?: VProperty<undefined>
           'ADBE Vector Grad HiLite Angle'?: VProperty<number>
@@ -831,8 +831,8 @@ declare namespace AeVirtualDOM {
           'ADBE Vector Composite Order'?: VPropertyNotKeyframable<1 | 2>
           'ADBE Vector Fill Rule'?: VPropertyNotKeyframable<1 | 2>
           'ADBE Vector Grad Type'?: VPropertyNotKeyframable<1 | 2>
-          'ADBE Vector Grad Start Pt'?: VProperty<Iterable<number>>
-          'ADBE Vector Grad End Pt'?: VProperty<Iterable<number>>
+          'ADBE Vector Grad Start Pt'?: VProperty<Array<number>>
+          'ADBE Vector Grad End Pt'?: VProperty<Array<number>>
           'ADBE Vector Grad HiLite Length'?: VProperty<number>
           'ADBE Vector Grad HiLite Angle'?: VProperty<number>
           'ADBE Vector Grad Colors'?: VProperty<undefined> 
@@ -847,7 +847,7 @@ declare namespace AeVirtualDOM {
           "ADBE Vector Blend Mode"?: VPropertyNotKeyframable<number>
           "ADBE Vector Composite Order"?:VPropertyNotKeyframable<1 | 2>
           "ADBE Vector Fill Rule"?:VPropertyNotKeyframable<1 | 2>
-          "ADBE Vector Fill Color"?: VProperty<Iterable<number>>
+          "ADBE Vector Fill Color"?: VProperty<Array<number>>
           "ADBE Vector Fill Opacity"?: VProperty<number>
           hooks?: {
             [name: string]: VHook<PropertyGroup>
@@ -858,7 +858,7 @@ declare namespace AeVirtualDOM {
         [name: string]: VPropertyBase & {
           'ADBE Vector Blend Mode'?: VPropertyNotKeyframable<number>
           'ADBE Vector Composite Order'?: VPropertyNotKeyframable<1 | 2>
-          'ADBE Vector Stroke Color'?: VProperty<Iterable<number>>
+          'ADBE Vector Stroke Color'?: VProperty<Array<number>>
           'ADBE Vector Stroke Opacity'?: VProperty<number>
           'ADBE Vector Stroke Width'?: VProperty<number>
           'ADBE Vector Stroke Line Cap'?: VPropertyNotKeyframable<1 | 2 | 3>
@@ -917,9 +917,9 @@ declare namespace AeVirtualDOM {
           "ADBE Vector Repeater Offset"?: VProperty<number>
           "ADBE Vector Repeater Order"?: VPropertyNotKeyframable<1 | 2>
           "ADBE Vector Repeater Transform"?: {
-            "ADBE Vector Repeater Anchor"?: VProperty<Iterable<number>>
-            "ADBE Vector Repeater Position"?: VProperty<Iterable<number>>
-            "ADBE Vector Repeater Scale"?: VProperty<Iterable<number>>
+            "ADBE Vector Repeater Anchor"?: VProperty<Array<number>>
+            "ADBE Vector Repeater Position"?: VProperty<Array<number>>
+            "ADBE Vector Repeater Scale"?: VProperty<Array<number>>
             "ADBE Vector Repeater Rotation"?: VProperty<number>
             "ADBE Vector Repeater Opacity 1"?: VProperty<number>
             "ADBE Vector Repeater Opacity 2"?: VProperty<number>
@@ -939,7 +939,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface SolidLayerProps extends AVLayerBaseProps {
-    initial: [color: Iterable<number>, name: string, width: number, height: number, pixelAspect: number, duration?: number]
+    initial: [color: Array<number>, name: string, width: number, height: number, pixelAspect: number, duration?: number]
 
     /** Key for this element. */
     key?: string | number
@@ -972,7 +972,7 @@ declare namespace AeVirtualDOM {
       'ADBE Text More Options'?: {
         selected?: boolean
         "ADBE Text Anchor Point Option"?: VPropertyNotKeyframable<1 | 2 | 3 | 4>
-        "ADBE Text Anchor Point Align"?: VProperty<Iterable<number>>
+        "ADBE Text Anchor Point Align"?: VProperty<Array<number>>
         "ADBE Text Render Order"?: VPropertyNotKeyframable<1 | 2 | 3>
         "ADBE Text Character Blend Mode"?: VPropertyNotKeyframable<number>
         hooks?: {
@@ -1034,7 +1034,7 @@ declare namespace AeVirtualDOM {
                   'ADBE Text Expressible Selector'?: {
                     [name: string]: {
                       "ADBE Text Range Type2"?: VPropertyNotKeyframable<1 | 2 | 3 | 4>
-                      "ADBE Text Expressible Amount"?: VProperty<Iterable<number>>
+                      "ADBE Text Expressible Amount"?: VProperty<Array<number>>
                       hooks?: {
                         [name: string]: VHook<PropertyGroup>
                       }
@@ -1046,9 +1046,9 @@ declare namespace AeVirtualDOM {
                 }
               }
               'ADBE Text Animator Properties'?: {
-                "ADBE Text Anchor Point 3D"?: VProperty<Iterable<number>>
-                "ADBE Text Position 3D"?: VProperty<Iterable<number>>
-                "ADBE Text Scale 3D"?: VProperty<Iterable<number>>
+                "ADBE Text Anchor Point 3D"?: VProperty<Array<number>>
+                "ADBE Text Position 3D"?: VProperty<Array<number>>
+                "ADBE Text Scale 3D"?: VProperty<Array<number>>
                 "ADBE Text Skew"?: VProperty<number>
                 "ADBE Text Skew Axis"?: VProperty<number>
                 "ADBE Text Rotation X"?: VProperty<number>
@@ -1057,8 +1057,8 @@ declare namespace AeVirtualDOM {
                 "ADBE Text Opacity"?: VProperty<number>
                 "ADBE Text Fill Opacity"?: VProperty<number>
                 "ADBE Text Stroke Opacity"?: VProperty<number>
-                "ADBE Text Fill Color"?: VProperty<Iterable<number>>
-                "ADBE Text Stroke Color"?: VProperty<Iterable<number>>
+                "ADBE Text Fill Color"?: VProperty<Array<number>>
+                "ADBE Text Stroke Color"?: VProperty<Array<number>>
                 "ADBE Text Fill Hue"?: VProperty<number>
                 "ADBE Text Stroke Hue"?: VProperty<number>
                 "ADBE Text Fill Saturation"?: VProperty<number>
@@ -1073,8 +1073,8 @@ declare namespace AeVirtualDOM {
                 "ADBE Text Character Range"?: VPropertyNotKeyframable<1 | 2>
                 "ADBE Text Character Replace"?: VProperty<number>
                 "ADBE Text Character Offset"?: VProperty<number>
-                "ADBE Text Line Spacing"?: VProperty<Iterable<number>>
-                "ADBE Text Blur"?: VProperty<Iterable<number>>
+                "ADBE Text Line Spacing"?: VProperty<Array<number>>
+                "ADBE Text Blur"?: VProperty<Array<number>>
                 hooks?: {
                   [name: string]: VHook<PropertyGroup>
                 }
@@ -1131,13 +1131,13 @@ declare namespace AeVirtualDOM {
     setValue?: A
 
     /** Creates a keyframe for the property. */
-    setValueAtTime?: [time: number, value: A] | Iterable<number | A>
+    setValueAtTime?: [time: number, value: A] | Array<number | A>
 
     /** Creates a set of keyframes for the property. */
-    setValuesAtTimes?: [times: Iterable<number>, values: Iterable<A>] | Iterable<Iterable<number> | Iterable<A>>
+    setValuesAtTimes?: [times: Array<number>, values: Array<A>] | Array<Array<number> | Array<A>>
 
     /** Finds a keyframe and sets the value of the property at that keyframe. */
-    setValueAtKey?: [keyIndex: number, value: A] | Iterable<number | A>
+    setValueAtKey?: [keyIndex: number, value: A] | Array<number | A>
 
     /** Adds a new keyframe to the property at a given time. */
     addKey?: number
@@ -1150,77 +1150,77 @@ declare namespace AeVirtualDOM {
       keyIndex: number,
       inValue: KeyframeInterpolationType,
       outValue?: KeyframeInterpolationType
-    ] | Iterable<number | KeyframeInterpolationType>
+    ] | Array<number | KeyframeInterpolationType>
 
     /** Sets the “in” and “out” tangent vectors for a key. */
     setSpatialTangentsAtKey?: [
       keyIndex: number,
-      inTangent: Iterable<number>,
-      outTangent: Iterable<number>
-    ] | Iterable<number | Iterable<number>>
+      inTangent: Array<number>,
+      outTangent: Array<number>
+    ] | Array<number | Array<number>>
 
     /** Sets the “in” and “out” temporal ease for a key. */
     setTemporalEaseAtKey?: [
       keyIndex: number, 
-      inTemporalEase: Iterable<KeyframeEase>,
-      outTemporalEase?: Iterable<KeyframeEase>
-    ] | Iterable<number | Iterable<KeyframeEase>>
+      inTemporalEase: Array<KeyframeEase>,
+      outTemporalEase?: Array<KeyframeEase>
+    ] | Array<number | Array<KeyframeEase>>
 
     /** Sets whether a keyframe has temporal continuity. */
-    setTemporalContinuousAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setTemporalContinuousAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Sets whether a keyframe has temporal auto-Bezier. */
-    setTemporalAutoBezierAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setTemporalAutoBezierAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Sets whether a keyframe has spatial continuity. */
-    setSpatialContinuousAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setSpatialContinuousAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Sets whether a keyframe has spatial auto-Bezier. */
-    setSpatialAutoBezierAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setSpatialAutoBezierAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Sets whether a keyframe is roving. */
-    setRovingAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setRovingAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Sets whether a keyframe is selected. */
-    setSelectedAtKey?: [keyIndex: number, value: boolean] | Iterable<number | boolean>
+    setSelectedAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
     /** Object providing info about keyframes. */
-    keyframes?: {
+    value?: A | {
       /** Keyframes times. */
-      times?: Iterable<number>
+      times?: Array<number>
 
       /** Keyfames value. */
-      values?: Iterable<A>
+      values?: Array<A>
 
       /** Sets the “in” and “out” temporal ease for keys. */
-      temporalEase?: Iterable<Iterable<KeyframeEase | Iterable<KeyframeEase>>>
-        | { all: Iterable<KeyframeEase | Iterable<KeyframeEase>> }
-        // | Map<'all', Iterable<KeyframeEase> | Iterable<Iterable<KeyframeEase>>>
+      temporalEase?: Array<Array<KeyframeEase | Array<KeyframeEase>>>
+        | { all: Array<KeyframeEase | Array<KeyframeEase>> }
+        // | Map<'all', Array<KeyframeEase> | Array<Array<KeyframeEase>>>
 
       /** Sets whether keyframes have temporal continuity. */
-      temporalContinuous?: Iterable<boolean> | { all: boolean } 
+      temporalContinuous?: Array<boolean> | { all: boolean } 
 
       /** Sets whether keyframes have temporal auto-Bezier. */
-      temporalAutoBezier?: Iterable<boolean> | { all: boolean } 
+      temporalAutoBezier?: Array<boolean> | { all: boolean } 
 
       /** Sets the “in” and “out” tangent vectors for keys. */
-      spatialTangents?: Iterable<Iterable<number | Iterable<number>>> | { all: Iterable<number | Iterable<number>> }
+      spatialTangents?: Array<Array<number | Array<number>>> | { all: Array<number | Array<number>> }
 
       /** Sets whether keyframes have spatial auto-Bezier. */
-      spatialAutoBezier?: Iterable<boolean> | { all: boolean } 
+      spatialAutoBezier?: Array<boolean> | { all: boolean } 
 
       /** Sets whether keyframes have spatial continuity. */
-      spatialContinuous?: Iterable<boolean> | { all: boolean } 
+      spatialContinuous?: Array<boolean> | { all: boolean } 
 
       /** Sets the interpolation type for a key. */
-      interpolationType?: Iterable<KeyframeInterpolationType | Iterable<KeyframeInterpolationType>>
-        | { all: KeyframeInterpolationType | Iterable<KeyframeInterpolationType> }
+      interpolationType?: Array<KeyframeInterpolationType | Array<KeyframeInterpolationType>>
+        | { all: KeyframeInterpolationType | Array<KeyframeInterpolationType> }
 
       /** Sets whether keyframes are roving. */
-      roving?: Iterable<boolean> | { all: boolean } 
+      roving?: Array<boolean> | { all: boolean } 
 
       /** Sets whether keyframes are selected. */
-      selected?: Iterable<boolean> | { all: boolean } 
+      selected?: Array<boolean> | { all: boolean } 
     }
 
     hooks?: {
@@ -1242,7 +1242,7 @@ declare namespace AeVirtualDOM {
   interface VNode<T extends Tags> {
     tagName: Tags;
     properties: VProperties[T];
-    children: T extends ItemsTags ? Iterable<VTree<ChildsTagNames<T>>> : [];
+    children: T extends ItemsTags ? Array<VTree<ChildsTagNames<T>>> : [];
     key?: string | number;
     namespace?: string;
     count: number;
@@ -1258,7 +1258,7 @@ declare namespace AeVirtualDOM {
     new (
       tagName: Tags,
       properties: VProperties,
-      children: Iterable<VTree<ChildsTagNames<typeof tagName>>>,
+      children: Array<VTree<ChildsTagNames<typeof tagName>>>,
       key?: string | number
     ): VNode<typeof tagName>;
   }
@@ -1301,14 +1301,14 @@ declare namespace AeVirtualDOM {
     namespace?: string;
   }
 
-  type VChild<T extends Tags> = Iterable<VTree<T>> | VTree<T>;
+  type VChild<T extends Tags> = Array<VTree<T>> | VTree<T>;
 
   function create(vnode: VNode<Tags> | Widget | Thunk<Tags>): AeNode;
 
   function h<T extends Tags>(
     tagName: T,
     properties?: VProperties[T],
-    children?: Iterable<VChild<ChildsTagNames<T>>>
+    children?: Array<VChild<ChildsTagNames<T>>>
   ): VNode<T>;
 
   // function h<T extends Tags>(

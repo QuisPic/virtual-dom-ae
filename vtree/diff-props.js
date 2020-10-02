@@ -26,11 +26,11 @@ function diffProps(a, b) {
             } else if (aKey === 'hooks') {
                 diff = diff || {}
                 diff[aKey] = bValue
-            } else if (aKey === 'keyframes') {
+            } else if (aKey === 'value') {
                 var keyframesDiff = diffKeyframes(aValue, bValue)
                 if (keyframesDiff) {
                   diff = diff || {}
-                  diff.keyframes = keyframesDiff
+                  diff.value = keyframesDiff
                 }
             } else {
                 var objectDiff = diffProps(aValue, bValue)

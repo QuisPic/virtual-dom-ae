@@ -18,6 +18,15 @@ function createDomTree(node, domParent) {
       var self = tree.self()
 
       if (self) {
+        if (propName === 'value') {
+          propName = 'setValue'
+          if (self.numKeys) {
+            for (var i = self.numKeys; i > 0; i--) {
+              self.removeKey(i)
+            }
+          }
+        }
+
         if (typeof self[propName] === 'function') {
           if (isArray(value)) {
             try {
