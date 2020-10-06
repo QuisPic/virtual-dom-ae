@@ -1184,7 +1184,7 @@ declare namespace AeVirtualDOM {
     /** Sets whether a keyframe is selected. */
     setSelectedAtKey?: [keyIndex: number, value: boolean] | Array<number | boolean>
 
-    /** Object providing info about keyframes. */
+    /** Value or an object providing info about keyframes. */
     value?: A | {
       /** Keyframes times. */
       times?: Array<number>
@@ -1193,34 +1193,33 @@ declare namespace AeVirtualDOM {
       values?: Array<A>
 
       /** Sets the “in” and “out” temporal ease for keys. */
-      temporalEase?: Array<Array<KeyframeEase | Array<KeyframeEase>>>
+      temporalEase?: Array<Array<KeyframeEase | Array<KeyframeEase>> | undefined>
         | { all: Array<KeyframeEase | Array<KeyframeEase>> }
-        // | Map<'all', Array<KeyframeEase> | Array<Array<KeyframeEase>>>
 
       /** Sets whether keyframes have temporal continuity. */
-      temporalContinuous?: Array<boolean> | { all: boolean } 
+      temporalContinuous?: Array<boolean | undefined> | { all: boolean } 
 
       /** Sets whether keyframes have temporal auto-Bezier. */
-      temporalAutoBezier?: Array<boolean> | { all: boolean } 
+      temporalAutoBezier?: Array<boolean | undefined> | { all: boolean } 
 
       /** Sets the “in” and “out” tangent vectors for keys. */
-      spatialTangents?: Array<Array<number | Array<number>>> | { all: Array<number | Array<number>> }
+      spatialTangents?: Array<Array<number | Array<number>> | undefined> | { all: Array<number | Array<number>> }
 
       /** Sets whether keyframes have spatial auto-Bezier. */
-      spatialAutoBezier?: Array<boolean> | { all: boolean } 
+      spatialAutoBezier?: Array<boolean | undefined> | { all: boolean } 
 
       /** Sets whether keyframes have spatial continuity. */
-      spatialContinuous?: Array<boolean> | { all: boolean } 
+      spatialContinuous?: Array<boolean | undefined> | { all: boolean } 
 
       /** Sets the interpolation type for a key. */
-      interpolationType?: Array<KeyframeInterpolationType | Array<KeyframeInterpolationType>>
+      interpolationType?: Array<KeyframeInterpolationType | Array<KeyframeInterpolationType> | undefined>
         | { all: KeyframeInterpolationType | Array<KeyframeInterpolationType> }
 
       /** Sets whether keyframes are roving. */
-      roving?: Array<boolean> | { all: boolean } 
+      roving?: Array<boolean | undefined> | { all: boolean } 
 
       /** Sets whether keyframes are selected. */
-      selected?: Array<boolean> | { all: boolean } 
+      selected?: Array<boolean | undefined> | { all: boolean } 
     }
 
     hooks?: {

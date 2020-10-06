@@ -1,5 +1,5 @@
-var isIterable = require("iterall").isIterable
 var isObjectLiteral = require("../vdom/is-object-literal")
+var isArray = require('x-is-array')
 var arraySearch = require("./binary-search")
 var isSameArray = require("./is-same-array")
 
@@ -92,7 +92,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
             var ai = 0, bi = 0
             for (bi = 0, ai = 0; bi < bLen; bi++) {
               if (aTimes[ai] === bTimes[bi]) {
-                if (aValues[ai] !== bValues[bi]) {
+                if (!areValuesEqual(aValues[ai], bValues[bi])) {
                   diff.times.push(bTimes[bi])
                   diff.values.push(bValues[bi])
                 }
@@ -109,7 +109,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
                   }
                 
                   if (aTime === bTime) {
-                    if (aValues[ai] !== bValues[bi]) {
+                    if (!areValuesEqual(aValues[ai], bValues[bi])) {
                       diff.times.push(bTime)
                       diff.values.push(bValues[bi])
                     }
@@ -153,7 +153,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
         } else {
           if (bType === 'object') {
             diff[propName] = bValue
-          } else if (bType === 'iterable') {
+          } else if (bType === 'array') {
             var len = bValue.length
             for (var ai = 0, bi = 0; bi < len; bi++) {
               while (arraySearch(diff.remove, ai, sortFunc) >= 0) {
@@ -164,7 +164,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
                 continue;
               }
 
-              if (bValue[bi] !== aValue[ai]) {
+              if (!areValuesEqual(bValue[bi], aValue[ai])) {
                 diff[propName] = diff[propName] || []
                 diff[propName][bi] = bValue[bi]
               }
@@ -185,11 +185,19 @@ function addKeyframeProps(index, keys, props, diff) {
     if (isObjectLiteral(value)) {
       diff[key] = diff[key] || []
       diff[key][index] = value.all
-    } else if (isIterable(value) && value[index]) {
+    } else if (isArray(value)) {
       diff[key] = diff[key] || []
       diff[key][index] = value[index]
     }
   }
+}
+
+function areValuesEqual(a, b) {
+  if (isArray(a) && isArray(b)) {
+    return isSameArray(a, b)
+  }
+
+  return a === b
 }
 
 function getType(obj) {
@@ -197,11 +205,11 @@ function getType(obj) {
     return 'object'
   }
 
-  if (isIterable(obj)) {
-    return 'iterable'
+  if (isArray(obj)) {
+    return 'array'
   }
 
-  return 'other'
+  throw new Error('Value passed to keyframe props should be of type object or array.')
 }
 
 function sortFunc(a, b) {

@@ -17,7 +17,7 @@ function isSameArray(a, b) {
     const bType = typeof bVal
 
     if (aType !== bType
-     || (aType === 'object' && !isSameArr(aVal, bVal))
+     || (aType === 'object' && !isSameArray(aVal, bVal))
      || a[i] !== b[i]) {
       return false
     } 

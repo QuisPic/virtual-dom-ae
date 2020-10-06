@@ -1,4 +1,3 @@
-require('./object-keys-polyfill')
 var forEach = require('iterall').forEach
 var isArray = require('x-is-array')
 var isObjectLiteral = require('./is-object-literal')
@@ -33,7 +32,7 @@ function setKeyframes(node, keyframes, layerNode) {
       }
       node.setValuesAtTimes(times, values)
     } else {
-      throw new Error('Keyframes times and values have different numbers of elements.')
+      throw new Error('Keyframes times and values have different numbers of elements. Times: ' + timesLength + ', Values: ' + values.length + '.')
     }
   }
 
@@ -43,7 +42,7 @@ function setKeyframes(node, keyframes, layerNode) {
     value = keyframes[name]
     switch (name) {
       case 'temporalEase':
-        setTemporalEase(node,value)
+        setTemporalEase(node, value)
         break;
       case 'temporalContinuous':
         setKeyframesParameter('setTemporalContinuousAtKey', node, value)
@@ -81,7 +80,7 @@ function setKeyframesParameter(methodName, node, value) {
       node[methodName](i, valueAll)
     }
   } else {
-    var indices = Object.keys(value)
+    var indices = getIndices(value)
     for (var i = 0, len = indices.length; i < len; i++) {
       node[methodName](+indices[i] + 1, value[indices[i]])
     }
@@ -101,15 +100,15 @@ function setTemporalEase(node, value) {
       }
     }
   } else {
-    var indices = Object.keys(value)
+    var indices = getIndices(value)
     var easeValue
 
     for (var i = 0, len = indices.length; i < len; i++) {
       easeValue = value[indices[i]]
       if (easeValue[0] instanceof KeyframeEase) {
-        node.setTemporalEaseAtKey(+indices[i] + 1, easeValue)
+        node.setTemporalEaseAtKey(indices[i] + 1, easeValue)
       } else {
-        node.setTemporalEaseAtKey(+indices[i] + 1, easeValue[0], easeValue[1])
+        node.setTemporalEaseAtKey(indices[i] + 1, easeValue[0], easeValue[1])
       }
     }
   }
@@ -128,14 +127,14 @@ function setSpatialTangents(node, value) {
       }
     }
   } else {
-    var indices = Object.keys(value)
+    var indices = getIndices(value)
     var tangentValue
     for (var i = 0, len = indices.length; i < len; i++) {
       tangentValue = value[indices[i]]
       if (typeof tangentValue[0] === 'number') {
-        node.setSpatialTangentsAtKey(+indices[i] + 1, tangentValue)
+        node.setSpatialTangentsAtKey(indices[i] + 1, tangentValue)
       } else {
-        node.setSpatialTangentsAtKey(+indices[i] + 1, tangentValue[0], tangentValue[1])
+        node.setSpatialTangentsAtKey(indices[i] + 1, tangentValue[0], tangentValue[1])
       }
     }
   }
@@ -154,17 +153,30 @@ function setInterpolationType(node, value) {
       }
     }
   } else {
-    var indices = Object.keys(value)
-    var typeValue
+    var indices = getIndices(value)
     for (var i = 0, len = indices.length; i < len; i++) {
-      typeValue = value[indices[i]]
+      var typeValue = value[indices[i]]
       if (typeof typeValue === 'number') {
-        node.setInterpolationTypeAtKey(+indices[i] + 1, typeValue)
+        node.setInterpolationTypeAtKey(indices[i] + 1, typeValue)
       } else {
-        node.setInterpolationTypeAtKey(+indices[i] + 1, typeValue[0], typeValue[1])
+        node.setInterpolationTypeAtKey(indices[i] + 1, typeValue[0], typeValue[1])
       }
     }
   }
+}
+
+function getIndices(arr) {
+  var len = arr.length
+  var indices = []
+
+  for (var i = 0; i < len; i++) {
+    var value = arr[i]
+    if (value !== undefined && value !== null) {
+      indices.push(i)
+    }
+  }
+
+  return indices
 }
 
 // function immutableToJS(values) {
