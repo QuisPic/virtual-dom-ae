@@ -44,8 +44,12 @@ function createElement(vnode, domParent) {
           parent = app.project
         }
 
-        if (typeof initial === 'number') {
-          node = app.project.itemByID(initial)
+        if (initial[0] instanceof CompItem) {
+          node = initial[0]
+
+          if (initial[1] !== false) {
+            node.parentFolder = parent === app.project ? parent.rootFolder : parent
+          }
         } else if (typeof initial[0] === 'number') {
           node = app.project.itemByID(initial[0])
 
@@ -61,7 +65,13 @@ function createElement(vnode, domParent) {
           parent = app.project
         }
 
-        if (typeof initial[0] === 'number') {
+        if (initial[0] instanceof FolderItem) {
+          node = initial[0]
+
+          if (initial[1] !== false) {
+            node.parentFolder = parent === app.project ? parent.rootFolder : parent
+          }
+        } else if (typeof initial[0] === 'number') {
           node = app.project.itemByID(initial[0])
 
           if (initial[1] !== false) {
@@ -75,47 +85,88 @@ function createElement(vnode, domParent) {
         if (!parent) {
           parent = app.project
         }
-        node = app.project.itemByID(initial)
+
+        if (initial[0] instanceof AVItem) {
+          node = initial[0]
+        } else {
+          node = app.project.itemByID(initial[0])
+        }
 
         if (initial[1] !== false) {
           node.parentFolder = parent === app.project ? parent.rootFolder : parent
         }
         break;
       case 'avLayer':
-        initial[0] = typeof initial[0] === 'number' ? app.project.itemByID(initial[0]) : initial[0]
-        node = parent.layers.add.apply(parent.layers, initial)
+        if (initial[0] instanceof AVLayer) {
+          node = initial[0]
+        } else {
+          initial[0] = typeof initial[0] === 'number' ? app.project.itemByID(initial[0]) : initial[0]
+          node = parent.layers.add.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'shape':
-        node = parent.layers.addShape.apply(parent.layers, initial)
+        if (initial[0] instanceof ShapeLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addShape.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'text':
-        node = parent.layers.addText.apply(parent.layers, initial)
+        if (initial[0] instanceof TextLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addText.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'null':
-        node = parent.layers.addNull.apply(parent.layers, initial)
+        if (initial[0] instanceof AVLayer) {
+          if (initial[0].nullLayer) {
+            node = initial[0]
+          } else {
+            throw new Error('Wrong source was provided to Null VNode. Source can only be a Null Layer, but got ' + initial[0].constructor + '.')
+          }
+        } else {
+          node = parent.layers.addNull.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'solid':
-        node = parent.layers.addSolid.apply(parent.layers, initial)
+        if (initial[0] instanceof AVLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addSolid.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'camera':
-        node = parent.layers.addCamera.apply(parent.layers, initial)
+        if (initial[0] instanceof CameraLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addCamera.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'boxText':
-        node = parent.layers.addBoxText.apply(parent.layers, initial)
+        if (initial[0] instanceof TextLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addBoxText.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       case 'light':
-        node = parent.layers.addLight.apply(parent.layers, initial)
+        if (initial[0] instanceof LightLayer) {
+          node = initial[0]
+        } else {
+          node = parent.layers.addLight.apply(parent.layers, initial)
+        }
         node.moveToEnd()
         break;
       default:
-        throw new Error('Unknown element name: ' + tagName);
+        throw new Error('Unknown VNode tag: ' + tagName);
     }
 
     if (layerParent) {

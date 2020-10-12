@@ -18,9 +18,9 @@ function isSameArray(a, b) {
 
     if (aType !== bType
      || (aType === 'object' && !isSameArray(aVal, bVal))
-     || a[i] !== b[i]) {
+     || aVal !== bVal) {
       return false
-    } 
+    }
   }
    
   return true
