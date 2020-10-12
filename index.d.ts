@@ -282,7 +282,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface BoxTextLayerProps extends TextBaseProps {
-    initial?: [[width: number, height: number]]
+    initial?: [[width: number, height: number]] | TextLayer
 
     /** Key for this element. */
     key?: string | number
@@ -293,7 +293,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface CameraLayerProps extends LayerProps {
-    initial: [name: string, centerPoint: Array<number>]
+    initial: [name: string, centerPoint: Array<number>] | CameraLayer
 
     /** Key for this element. */
     key?: string | number
@@ -347,7 +347,7 @@ declare namespace AeVirtualDOM {
       pixelAspect: number,
       duration: number,
       frameRate: number,
-    ] | [itemId: number, moveToParent?: boolean] | number
+    ] | [itemId: number, moveToParent?: boolean] | number | CompItem
 
     /** Key for this element. */
     key?: string | number
@@ -431,7 +431,7 @@ declare namespace AeVirtualDOM {
 
   interface FolderItemProps extends ItemProps {
     /** The name of this folder. */
-    initial: string | [itemId: number, moveToParent?: boolean]
+    initial: string | [itemId: number, moveToParent?: boolean] | FolderItem
 
     /** Key for this element. */
     key?: string | number
@@ -523,7 +523,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface LightLayerProps extends LayerProps {
-    initial: [name: string, centerPoint: Array<number>]
+    initial: [name: string, centerPoint: Array<number>] | LightLayer
 
     /** Key for this element. */
     key?: string | number
@@ -565,8 +565,8 @@ declare namespace AeVirtualDOM {
   }
 
   interface NullLayerProps extends AVLayerBaseProps {
-    /** Duration of this layer. */
-    initial?: number
+    /** Duration of this layer or the layer itself. */
+    initial?: number | AVLayer
 
     /** Key for this element. */
     key?: string | number
@@ -579,6 +579,8 @@ declare namespace AeVirtualDOM {
   interface ShapeLayerProps extends AVLayerBaseProps {
     /** Key for this element. */
     key?: string | number
+
+    initial?: ShapeLayer
 
     'ADBE Root Vectors Group'?: VectorsGroup
 
@@ -939,7 +941,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface SolidLayerProps extends AVLayerBaseProps {
-    initial: [color: Array<number>, name: string, width: number, height: number, pixelAspect: number, duration?: number]
+    initial: [color: Array<number>, name: string, width: number, height: number, pixelAspect: number, duration?: number] | AVLayer
 
     /** Key for this element. */
     key?: string | number
@@ -1093,7 +1095,7 @@ declare namespace AeVirtualDOM {
   }
 
   interface TextLayerProps extends TextBaseProps {
-    initial?: string
+    initial?: string | TextLayer
 
     /** Key for this element. */
     key?: string | number
