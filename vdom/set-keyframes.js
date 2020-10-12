@@ -21,16 +21,18 @@ function setKeyframes(node, keyframes, layerNode) {
   if (isArray(times) && timesLength > 0 && isArray(values) && values.length > 0) {
     if (timesLength === values.length) {
       const layer = layerNode.self()
+      const adjustedTimes = times.slice()
+
       if (layer) {
         const startTime = layer.startTime
         
         if (startTime) {
           for (let i = 0; i < timesLength; i++) {
-            times[i] += startTime
+            adjustedTimes[i] += startTime
           }
         }
       }
-      node.setValuesAtTimes(times, values)
+      node.setValuesAtTimes(adjustedTimes, values)
     } else {
       throw new Error('Keyframes times and values have different numbers of elements. Times: ' + timesLength + ', Values: ' + values.length + '.')
     }
