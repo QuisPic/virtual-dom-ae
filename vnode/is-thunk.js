@@ -1,5 +1,3 @@
-module.exports = isThunk
-
-function isThunk(t) {
+export function isThunk(t) {
     return t && t.type === "Thunk"
 }

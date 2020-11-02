@@ -1,10 +1,6 @@
-var isVNode = require("./is-vnode")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
+import { isVNode, isWidget, isThunk } from '../internal'
 
-module.exports = handleThunk
-
-function handleThunk(a, b) {
+export function handleThunk(a, b) {
     var renderedA = a
     var renderedB = b
 

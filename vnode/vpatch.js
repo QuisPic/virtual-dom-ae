@@ -1,4 +1,4 @@
-var version = require("./version")
+import { version } from './version'
 
 VirtualPatch.NONE = 0
 VirtualPatch.VTEXT = 1
@@ -10,9 +10,7 @@ VirtualPatch.INSERT = 6
 VirtualPatch.REMOVE = 7
 VirtualPatch.THUNK = 8
 
-module.exports = VirtualPatch
-
-function VirtualPatch(type, vNode, patch) {
+export function VirtualPatch(type, vNode, patch) {
     this.type = Number(type)
     this.vNode = vNode
     this.patch = patch

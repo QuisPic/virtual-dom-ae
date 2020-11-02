@@ -1,16 +1,11 @@
-var version = require("./version")
-var isArray = require("x-is-array")
-var isVNode = require("./is-vnode")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
-var isVHook = require("./is-vhook")
-
-module.exports = VirtualNode
+import { version } from './version'
+import isArray from 'x-is-array'
+import { isVNode, isWidget, isThunk } from '../internal'
 
 var noProperties = {}
 var noChildren = []
 
-function VirtualNode(tagName, initialProp, properties, children, key) {
+export function VirtualNode(tagName, initialProp, properties, children, key) {
     this.tagName = tagName
     this.initialProp = isArray(initialProp) ? initialProp : [initialProp]
     this.properties = properties || noProperties

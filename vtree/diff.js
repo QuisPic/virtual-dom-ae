@@ -1,40 +1,36 @@
-var isArray = require("x-is-array")
-
-var VPatch = require("../vnode/vpatch")
-var isVNode = require("../vnode/is-vnode")
-var isWidget = require("../vnode/is-widget")
-var isThunk = require("../vnode/is-thunk")
-var handleThunk = require("../vnode/handle-thunk")
-
-var diffProps = require("./diff-props")
-
-module.exports = diff
+import { VPatch, isVNode, isWidget, isThunk, handleThunk, applyPatch } from '../internal'
+import { diffProps } from './diff-props'
 
 function diff(a, b) {
     var patch = { a: a }
-    walk(a, b, patch, 0)
+    render(a, b, patch, 0)
     return patch
 }
 
-function walk(a, b, patch, index) {
+export function render(a, b) {
     if (a === b) {
         return
     }
 
-    var apply = patch[index]
-    var applyClear = false
+    if (arguments.length < 2) {
+      b = a
+      a = undefined
+    }
+
+    var apply
+    // var applyClear = false
 
     if (isThunk(a) || isThunk(b)) {
-        thunks(a, b, patch, index)
+        thunks(a, b)
     } else if (b == null) {
 
         // If a is a widget we will add a remove patch for it
         // Otherwise any child widgets/hooks must be destroyed.
         // This prevents adding two remove patches for a widget.
-        if (!isWidget(a)) {
-            clearState(a, patch, index)
-            apply = patch[index]
-        }
+        // if (!isWidget(a)) {
+        //     clearState(a, patch, index)
+        //     apply = patch[index]
+        // }
 
         apply = appendPatch(apply, new VPatch(VPatch.REMOVE, a, b))
     } else if (isVNode(b)) {
@@ -45,7 +41,8 @@ function walk(a, b, patch, index) {
                     apply = appendPatch(apply,
                         new VPatch(VPatch.PROPS, a, propsPatch))
                 }
-                apply = diffChildren(a, b, patch, apply, index)
+                b.domNode = a.domNode
+                apply = diffChildren(a, b, apply)
             } else {
                 apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
                 // applyClear = true
@@ -63,7 +60,7 @@ function walk(a, b, patch, index) {
     }
 
     if (apply) {
-        patch[index] = apply
+        applyPatch(apply)
     }
 
     // if (applyClear) {
@@ -71,7 +68,7 @@ function walk(a, b, patch, index) {
     // }
 }
 
-function diffChildren(a, b, patch, apply, index) {
+function diffChildren(a, b, apply) {
     var aChildren = a.children
     var orderedSet = reorder(aChildren, b.children)
     var bChildren = orderedSet.children
@@ -83,20 +80,15 @@ function diffChildren(a, b, patch, apply, index) {
     for (var i = 0; i < len; i++) {
         var leftNode = aChildren[i]
         var rightNode = bChildren[i]
-        index += 1
 
         if (!leftNode) {
             if (rightNode) {
                 // Excess nodes in b need to be added
                 apply = appendPatch(apply,
-                    new VPatch(VPatch.INSERT, null, rightNode))
+                    new VPatch(VPatch.INSERT, a, rightNode))
             }
         } else {
-            walk(leftNode, rightNode, patch, index)
-        }
-
-        if (isVNode(leftNode) && leftNode.count) {
-            index += leftNode.count
+            render(leftNode, rightNode)
         }
     }
 
@@ -147,12 +139,10 @@ function destroyWidgets(vNode, patch, index) {
 }
 
 // Create a sub-patch for thunks
-function thunks(a, b, patch, index) {
+function thunks(a, b) {
     var nodes = handleThunk(a, b)
-    var thunkPatch = diff(nodes.a, nodes.b)
-    if (hasPatches(thunkPatch)) {
-        patch[index] = new VPatch(VPatch.THUNK, null, thunkPatch)
-    }
+    render(nodes.a, nodes.b)
+    handleActions(b)
 }
 
 function hasPatches(patch) {

@@ -1,16 +1,8 @@
 'use strict';
+import isArray from 'x-is-array'
+import { VNode, isVNode, isWidget, isThunk } from '../internal'
 
-var isArray = require('x-is-array');
-
-var VNode = require('../vnode/vnode.js');
-var isVNode = require('../vnode/is-vnode');
-var isVText = require('../vnode/is-vtext');
-var isWidget = require('../vnode/is-widget');
-var isVThunk = require('../vnode/is-thunk');
-
-module.exports = h;
-
-function h(tagName, properties, children) {
+export function h(tagName, properties, children) {
     var childNodes = [];
     var initialProps = [];
     var tag, props, key;
@@ -63,7 +55,7 @@ function addChild(c, childNodes, tag, props) {
 }
 
 function isChild(x) {
-    return isVNode(x) || isVText(x) || isWidget(x) || isVThunk(x);
+    return isVNode(x) || isWidget(x) || isThunk(x);
 }
 
 function isChildren(x) {

@@ -1,4 +1,4 @@
-module.exports = function(haystack, needle, comparator) {
+export function binarySearch(haystack, needle, comparator) {
   if (haystack === undefined) {
     return -1
   }

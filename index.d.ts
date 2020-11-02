@@ -16,6 +16,7 @@ declare namespace AeVirtualDOM {
   interface Thunk<T extends Tags> {
     type: string
     vnode?: VNode<T>
+    actions?: (() => (void | VNode<T>)) | Array<() => (void | VNode<T>)>
     render: (previuos?: any) => VNode<T>
   }
 
@@ -1240,6 +1241,30 @@ declare namespace AeVirtualDOM {
 
   type ChildsTagNames<T extends Tags> = T extends 'folder' | 'root' ? ItemsTags : LayersTags 
 
+  type AeElement<T extends Tags> = T extends 'root'
+    ? ItemCollection
+    : T extends 'comp'
+      ? CompItem
+      : T extends 'folder'
+        ? FolderItem
+        : T extends 'avItem'
+          ? AVItem
+          : T extends 'avLayer' | 'null' | 'solid'
+            ? AVLayer
+            : T extends 'shape'
+              ? ShapeLayer
+              : T extends 'text' | 'boxText'
+                ? TextLayer
+                : T extends 'camera'
+                  ? CameraLayer
+                  : T extends 'light'
+                    ? LightLayer
+                    : never
+
+  type DomNode<T extends Tags> = {
+    self: () => AeElement<T>
+  }
+
   interface VNode<T extends Tags> {
     tagName: Tags;
     properties: VProperties[T];
@@ -1253,6 +1278,7 @@ declare namespace AeVirtualDOM {
     descendantHooks: any[];
     version: string;
     type: string; // 'VirtualNode'
+    readonly domNode?: DomNode<T>
   }
 
   interface VNodeConstructor {
@@ -1317,7 +1343,7 @@ declare namespace AeVirtualDOM {
   //   children?: T extends ItemsTags ? VChild<ChildsTagNames<T>>[] : []
   // ): VNode<T>;
 
-  function diff(left: VTree<Tags>, right: VTree<Tags>): VPatch[];
+  function render(left: VTree<Tags>, right?: VTree<Tags>): void;
 
   function patch<T extends AeNode>(rootNode: T, patches: VPatch[], renderOptions?: VPatchOptions<T>): T;
 
@@ -1334,9 +1360,9 @@ declare module "virtual-dom-ae/create-element" {
   import create = AeVirtualDOM.create;
   export = create;
 }
-declare module "virtual-dom-ae/diff" {
-  import diff = AeVirtualDOM.diff;
-  export = diff;
+declare module "virtual-dom-ae/render" {
+  import render = AeVirtualDOM.render;
+  export = render;
 }
 declare module "virtual-dom-ae/patch" {
   import patch = AeVirtualDOM.patch;

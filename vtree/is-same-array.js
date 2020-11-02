@@ -1,4 +1,4 @@
-function isSameArray(a, b) {
+export function isSameArray(a, b) {
   if (!a || !b) {
     return false
   }
@@ -25,5 +25,3 @@ function isSameArray(a, b) {
    
   return true
 }
-
-module.exports = isSameArray

@@ -1,14 +1,22 @@
-var applyProperties = require("./apply-properties")
-var createDomTree = require("./create-dom-tree")
+import { applyProperties } from './apply-properties'
+import { createDomTree, handleThunk, handleActions, isThunk, isWidget, isVNode } from '../internal'
 
-var isVNode = require("../vnode/is-vnode.js")
-var isWidget = require("../vnode/is-widget.js")
-var handleThunk = require("../vnode/handle-thunk.js")
+export function createElement(element, domParent) {
+    var vnode
+    var elementIsThunk = isThunk(element)
 
-module.exports = createElement
+    if (elementIsThunk) {
+      vnode = handleThunk(element).a
+    } else {
+      vnode = element
+    }
 
-function createElement(vnode, domParent) {
-    vnode = handleThunk(vnode).a
+    if (isWidget(vnode)) {
+        node = vnode.init()
+        return createDomTree(node)
+    } else if (!isVNode(vnode)) {
+        return null
+    }
 
     var tagName = vnode.tagName
     var initial = vnode.initialProp
@@ -28,12 +36,6 @@ function createElement(vnode, domParent) {
        }
     }
 
-    if (isWidget(vnode)) {
-        node = vnode.init()
-        return createDomTree(node)
-    } else if (!isVNode(vnode)) {
-        return null
-    }
 
     switch (tagName) {
       case 'root': 
@@ -174,6 +176,7 @@ function createElement(vnode, domParent) {
     }
 
     var domTree = createDomTree(node, domParent)
+    vnode.domNode = domTree
     var props = vnode.properties
     applyProperties(domTree, props, undefined, domTree)
 
@@ -187,6 +190,10 @@ function createElement(vnode, domParent) {
               domTree.childNodes.push(childNode)
           }
       }
+    }
+
+    if (elementIsThunk) {
+      handleActions(element)
     }
 
     return domTree

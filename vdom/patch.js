@@ -1,11 +1,7 @@
-var isArray = require("x-is-array")
+import isArray from 'x-is-array'
+import { patchOp } from '../internal'
 
-var render = require("./create-element")
-var domIndex = require("./dom-index")
-var patchOp = require("./patch-op")
-module.exports = patch
-
-function patch(rootNode, patches, renderOptions) {
+/* function patch(rootNode, patches, renderOptions) {
     renderOptions = renderOptions || {}
     renderOptions.patch = renderOptions.patch && renderOptions.patch !== patch
         ? renderOptions.patch
@@ -38,35 +34,19 @@ function patchRecursive(rootNode, patches, renderOptions) {
     }
 
     return rootNode
-}
+} */
 
-function applyPatch(rootNode, domNode, patchList, renderOptions) {
-    if (!domNode) {
-        return rootNode
-    }
-
-    var newNode
-
+export function applyPatch(patchList) {
     if (isArray(patchList)) {
         for (var i = 0; i < patchList.length; i++) {
-            newNode = patchOp(patchList[i], domNode, renderOptions)
-
-            if (domNode === rootNode) {
-                rootNode = newNode
-            }
+            patchOp(patchList[i])
         }
     } else {
-        newNode = patchOp(patchList, domNode, renderOptions)
-
-        if (domNode === rootNode) {
-            rootNode = newNode
-        }
+        patchOp(patchList)
     }
-
-    return rootNode
 }
 
-function patchIndices(patches) {
+/* function patchIndices(patches) {
     var indices = []
 
     for (var key in patches) {
@@ -76,4 +56,4 @@ function patchIndices(patches) {
     }
 
     return indices
-}
+} */

@@ -1,11 +1,9 @@
-var isObject = require("is-object")
-var isObjectLiteral = require("./is-object-literal")
-var isHook = require("../vnode/is-vhook.js")
-var setKeys = require("./set-keyframes")
+import isObject from 'is-object'
+import isObjectLiteral from './is-object-literal'
+import { isHook } from '../internal'
+import { setKeyframes } from './set-keyframes'
 
-module.exports = applyProperties
-
-function applyProperties(node, props, previous, startNode) {
+export function applyProperties(node, props, previous, startNode) {
     var hooks
     for (var propName in props) {
         var propValue = props[propName]
@@ -15,7 +13,7 @@ function applyProperties(node, props, previous, startNode) {
         } else {
             if (isObjectLiteral(propValue)) {
                 if (propName === 'value') {
-                  setKeys(node.self(), propValue, startNode)
+                  setKeyframes(node.self(), propValue, startNode)
                 } else if (propName === 'members') {
                   members(node, propValue, previous ? previous[propName] : undefined, startNode)
                 } else if (propName === 'hooks') {

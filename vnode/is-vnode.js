@@ -1,7 +1,5 @@
-var version = require("./version")
+import { version } from './version'
 
-module.exports = isVirtualNode
-
-function isVirtualNode(x) {
+export function isVirtualNode(x) {
     return x && x.type === "VirtualNode" && x.version === version
 }

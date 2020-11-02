@@ -1,9 +1,7 @@
-var isObject = require("is-object")
-var isArray = require("x-is-array")
+import isObject from 'is-object'
+import isArray from 'x-is-array'
 
-module.exports = createDomTree
-
-function createDomTree(node, domParent) {
+export function createDomTree(node, domParent) {
   function tree(propName, value) {
     if (value === undefined) {
       if (tree.props.hasOwnProperty(propName) && tree.props[propName]) {

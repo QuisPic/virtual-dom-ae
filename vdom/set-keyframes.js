@@ -1,10 +1,7 @@
-var forEach = require('iterall').forEach
-var isArray = require('x-is-array')
-var isObjectLiteral = require('./is-object-literal')
+import isArray from 'x-is-array'
+import isObjectLiteral from './is-object-literal'
 
-module.exports = setKeyframes
-
-function setKeyframes(node, keyframes, layerNode) {
+export function setKeyframes(node, keyframes, layerNode) {
   if (keyframes.hasOwnProperty('remove')) {
     var remove = keyframes.remove
 
@@ -180,21 +177,3 @@ function getIndices(arr) {
 
   return indices
 }
-
-// function immutableToJS(values) {
-//   if (isImmutable(values)) {
-//     values = values.toJS()
-//   } else if (isObjectLiteral(values)) {
-//     if (isImmutable(values.all)) {
-//       values.all = values.all.toJS()
-//     }
-//   } else {
-//     forEach(values, function (val, i, collection) {
-//       if (isImmutable(val)) {
-//         collection[i] = val.toJS()
-//       }
-//     })
-//   }
-
-//   return values
-// }

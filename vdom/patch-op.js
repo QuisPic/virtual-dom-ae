@@ -1,35 +1,31 @@
-var applyProperties = require("./apply-properties")
+import { applyProperties } from './apply-properties'
+import { createElement, isWidget, VPatch } from '../internal'
+import { updateWidget } from './update-widget'
 
-var isWidget = require("../vnode/is-widget.js")
-var VPatch = require("../vnode/vpatch.js")
-
-var updateWidget = require("./update-widget")
-
-module.exports = applyPatch
-
-function applyPatch(vpatch, domNode, renderOptions) {
+export function patchOp(vpatch) {
     var type = vpatch.type
     var vNode = vpatch.vNode
     var patch = vpatch.patch
+    var domNode = vNode.domNode
 
     switch (type) {
         case VPatch.REMOVE:
             return removeNode(domNode, vNode);
         case VPatch.INSERT:
-            return insertNode(domNode, patch, renderOptions);
+            return insertNode(domNode, patch);
         case VPatch.WIDGET:
-            return widgetPatch(domNode, vNode, patch, renderOptions);
+            return widgetPatch(domNode, vNode, patch);
         case VPatch.VNODE:
-            return vNodePatch(domNode, vNode, patch, renderOptions);
+            return vNodePatch(domNode, vNode, patch);
         case VPatch.ORDER:
             reorderChildren(domNode, patch);
             return domNode
         case VPatch.PROPS:
             applyProperties(domNode, patch, vNode.properties, domNode);
             return domNode
-        case VPatch.THUNK:
-            return replaceRoot(domNode,
-                renderOptions.patch(domNode, patch, renderOptions));
+        // case VPatch.THUNK:
+        //     return replaceRoot(domNode,
+        //         renderOptions.patch(domNode, patch, renderOptions));
         default:
             return domNode;
     }
@@ -58,8 +54,8 @@ function removeNode(domNode, vNode) {
     return null
 }
 
-function insertNode(parentNode, vNode, renderOptions) {
-    var newNode = renderOptions.render(vNode, parentNode)
+function insertNode(parentNode, vNode) {
+    var newNode = createElement(vNode, parentNode)
 
     if (newNode) {
         parentNode.childNodes.push(newNode)
@@ -68,7 +64,7 @@ function insertNode(parentNode, vNode, renderOptions) {
     return parentNode
 }
 
-function widgetPatch(domNode, leftVNode, widget, renderOptions) {
+function widgetPatch(domNode, leftVNode, widget) {
     var updating = updateWidget(leftVNode, widget)
     var parentNode = domNode.parent
     var newNode = domNode
@@ -77,10 +73,10 @@ function widgetPatch(domNode, leftVNode, widget, renderOptions) {
         var self = domNode.self()
         var newNodeSelf = widget.update(leftVNode, self) || self
         if (newNodeSelf !== self) {
-          newNode = renderOptions.render(widget, parentNode)
+          newNode = createElement(widget, parentNode)
         }
     } else {
-        newNode = renderOptions.render(widget, parentNode)
+        newNode = createElement(widget, parentNode)
         destroyWidget(domNode.self(), leftVNode)
     }
 
@@ -99,7 +95,7 @@ function widgetPatch(domNode, leftVNode, widget, renderOptions) {
     return newNode
 }
 
-function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
+function vNodePatch(domNode, leftVNode, vNode) {
     var newNode = domNode
     var self = domNode.self()
     var parentTree = domNode.parent
@@ -109,7 +105,7 @@ function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
     }
 
     if (parentTree) {
-      newNode = renderOptions.render(vNode, parentTree)
+      newNode = createElement(vNode, parentTree)
   
       for (var key in domNode) {
         if (domNode.hasOwnProperty(key)) {

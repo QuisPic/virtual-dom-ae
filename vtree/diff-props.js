@@ -1,11 +1,9 @@
-var isObjectLiteral = require("../vdom/is-object-literal")
-var isArray = require('x-is-array')
-var arraySearch = require("./binary-search")
-var isSameArray = require("./is-same-array")
+import isArray from 'x-is-array'
+import isObjectLiteral from '../vdom/is-object-literal'
+import { binarySearch } from './binary-search'
+import { isSameArray } from './is-same-array'
 
-module.exports = diffProps
-
-function diffProps(a, b) {
+export function diffProps(a, b) {
     var diff
 
     for (var aKey in a) {
@@ -39,7 +37,7 @@ function diffProps(a, b) {
                     diff[aKey] = objectDiff
                 }
             }
-        } else if (Array.isArray(aValue) && Array.isArray(bValue)) {
+        } else if (isArray(aValue) && isArray(bValue)) {
           if (!isSameArray(aValue, bValue)) {
             diff = diff || {}
             diff[aKey] = bValue
@@ -156,7 +154,7 @@ function diffKeyframes(aKeyframes, bKeyframes) {
           } else if (bType === 'array') {
             var len = bValue.length
             for (var ai = 0, bi = 0; bi < len; bi++) {
-              while (arraySearch(diff.remove, ai, sortFunc) >= 0) {
+              while (binarySearch(diff.remove, ai, sortFunc) >= 0) {
                 ai++
               }
 

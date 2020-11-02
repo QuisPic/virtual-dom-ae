@@ -1,5 +1,3 @@
-module.exports = isObjectLiteral
-
-function isObjectLiteral(a) {
+export default function isObjectLiteral(a) {
   return a && a.constructor === Object
 };
