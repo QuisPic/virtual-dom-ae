@@ -6,28 +6,27 @@ export function patchOp(vpatch) {
     var type = vpatch.type
     var vNode = vpatch.vNode
     var patch = vpatch.patch
-    var domNode = vNode.domNode
 
     switch (type) {
         case VPatch.REMOVE:
-            return removeNode(domNode, vNode);
+            return removeNode(vNode.domNode, vNode);
         case VPatch.INSERT:
-            return insertNode(domNode, patch);
+            return insertNode(vNode.domNode, patch);
         case VPatch.WIDGET:
-            return widgetPatch(domNode, vNode, patch);
-        case VPatch.VNODE:
-            return vNodePatch(domNode, vNode, patch);
+            return widgetPatch(vNode.domNode, vNode, patch);
+        case VPatch.CREATE:
+            return createElement(patch, typeof vNode === 'object' ? vNode.domNode : undefined)
         case VPatch.ORDER:
-            reorderChildren(domNode, patch);
-            return domNode
+            reorderChildren(vNode.domNode, patch);
+            return vNode.domNode
         case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties, domNode);
-            return domNode
+            applyProperties(vNode.domNode, patch, vNode.properties, vNode.domNode);
+            return vNode.domNode
         // case VPatch.THUNK:
         //     return replaceRoot(domNode,
         //         renderOptions.patch(domNode, patch, renderOptions));
         default:
-            return domNode;
+            return vNode.domNode;
     }
 }
 

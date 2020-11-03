@@ -1,4 +1,4 @@
-import { VPatch, isVNode, isWidget, isThunk, handleThunk, applyPatch } from '../internal'
+import { VPatch, isVNode, isWidget, isThunk, handleThunk, applyPatch, handleActions } from '../internal'
 import { diffProps } from './diff-props'
 
 function diff(a, b) {
@@ -44,11 +44,11 @@ export function render(a, b) {
                 b.domNode = a.domNode
                 apply = diffChildren(a, b, apply)
             } else {
-                apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
+                apply = appendPatch(apply, new VPatch(VPatch.CREATE, a, b))
                 // applyClear = true
             }
         } else {
-            apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
+            apply = appendPatch(apply, new VPatch(VPatch.CREATE, a, b))
             // applyClear = true
         }
     } else if (isWidget(b)) {

@@ -2,7 +2,7 @@ import { version } from './version'
 
 VirtualPatch.NONE = 0
 VirtualPatch.VTEXT = 1
-VirtualPatch.VNODE = 2
+VirtualPatch.CREATE = 2
 VirtualPatch.WIDGET = 3
 VirtualPatch.PROPS = 4
 VirtualPatch.ORDER = 5
