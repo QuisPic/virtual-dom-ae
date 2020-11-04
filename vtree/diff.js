@@ -142,7 +142,7 @@ function destroyWidgets(vNode, patch, index) {
 function thunks(a, b) {
     var nodes = handleThunk(a, b)
     render(nodes.a, nodes.b)
-    handleActions(b)
+    handleActions(b, a)
 }
 
 function hasPatches(patch) {
