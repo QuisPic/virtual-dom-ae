@@ -11,7 +11,7 @@ declare namespace AeVirtualDOM {
 
   type AeNode = AVItem | CompItem | FolderItem | FootageItem | AVLayer | CameraLayer | LightLayer | ShapeLayer | TextLayer | Property<any> | PropertyGroup
 
-  type Tags = ItemsTags | LayersTags
+  type Tags = ItemsTags | LayersTags | 'container'
 
   interface Thunk<T extends Tags> {
     type: string
@@ -1267,7 +1267,7 @@ declare namespace AeVirtualDOM {
 
   interface VNode<T extends Tags> {
     tagName: Tags;
-    properties: VProperties[T];
+    properties: T extends ItemsTags | LayersTags ? VProperties[T] : {};
     children: T extends ItemsTags ? Array<VTree<ChildsTagNames<T>>> : [];
     key?: string | number;
     namespace?: string;
@@ -1332,10 +1332,20 @@ declare namespace AeVirtualDOM {
 
   function create(vnode: VNode<Tags> | Widget | Thunk<Tags>): AeNode;
 
-  function h<T extends Tags>(
+  function h<T extends ItemsTags | LayersTags>(
     tagName: T,
     properties?: VProperties[T],
     children?: Array<VChild<ChildsTagNames<T>>>
+  ): VNode<T>;
+
+  function h<T extends 'root'>(
+    tagName: T,
+    children?: Array<VChild<ItemsTags>>
+  ): VNode<T>;
+
+  function h<T extends 'container'>(
+    tagName: T,
+    children?: Array<VChild<Tags>>
   ): VNode<T>;
 
   // function h<T extends Tags>(

@@ -41,6 +41,8 @@ export function createElement(element, domParent) {
       case 'root': 
         node = app.project.items
         break;
+      case 'container':
+        break;
       case 'comp':
         if (!parent) {
           parent = app.project
@@ -171,24 +173,29 @@ export function createElement(element, domParent) {
         throw new Error('Unknown VNode tag: ' + tagName);
     }
 
-    if (layerParent) {
-      node.parent = layerParent
-    }
+    var domTree
+    if (node) {
+      if (layerParent) {
+        node.parent = layerParent
+      }
 
-    var domTree = createDomTree(node, domParent)
-    vnode.domNode = domTree
-    var props = vnode.properties
-    applyProperties(domTree, props, undefined, domTree)
+      var domTree = createDomTree(node, domParent)
+      vnode.domNode = domTree
+      var props = vnode.properties
+      applyProperties(domTree, props, undefined, domTree)
+    } else {
+      domTree = domParent
+    }
 
     var children = vnode.children
     var len = children.length
 
     if (len > 0) {
       for (var i = 0; i < len; i++) {
-          var childNode = createElement(children[i], domTree)
-          if (childNode) {
-              domTree.childNodes.push(childNode)
-          }
+        var childNode = createElement(children[i], domTree)
+        if (childNode) {
+            domTree.childNodes.push(childNode)
+        }
       }
     }
 
